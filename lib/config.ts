@@ -78,12 +78,12 @@ export const siteConfig = {
     // Umami 分析配置（自托管实例）
     umami: {
       // 网站 ID，在 umami 后台创建网站时生成
-      websiteId: 'your-umami-website-id',
+      websiteId: 'd534e79f-c215-4e1a-bdc6-bf562571e167',
       
       // umami 跟踪脚本 URL
       // 格式: http://your-umami-instance.com/script.js
       // 例如: http://localhost:3000/script.js
-      scriptUrl: 'https://your-umami-instance.com/script.js'
+      scriptUrl: 'http://umami.w-blogs.top/script.js'
     }
   }
 };
