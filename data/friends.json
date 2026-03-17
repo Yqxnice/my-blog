@@ -1,0 +1,12 @@
+[
+  {"name":"抖音","url":"https://www.douyin.com","description":"短视频平台","category":"social"},
+  {"name":"快手","url":"https://www.kuaishou.com","description":"短视频与直播","category":"social"},
+  {"name":"百度","url":"https://www.baidu.com","description":"搜索引擎","category":"search"},
+  {"name":"GitHub","url":"https://github.com","description":"代码托管与协作","category":"code"},
+  {"name":"知乎","url":"https://www.zhihu.com","description":"问答社区","category":"community"},
+  {"name":"CSDN","url":"https://www.csdn.net","description":"开发者社区","category":"community"},
+  {"name":"Gitee","url":"https://gitee.com","description":"代码托管平台","category":"code"},
+  {"name":"Stack Overflow","url":"https://stackoverflow.com","description":"开发者问答","category":"community"},
+  {"name":"简书","url":"https://www.jianshu.com","description":"优质原创文章","category":"blog"},
+  {"name":"Medium","url":"https://medium.com","description":"跨语言技术文章","category":"blog"}
+]
