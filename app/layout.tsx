@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { siteConfig } from "@/lib/config";
 import { Umami } from "@/components/analytics/Umami";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: {
@@ -97,6 +98,7 @@ export default function RootLayout({
           <Umami />
         </Suspense>
         {children}
+        <Analytics />
       </body>
     </html>
   );
