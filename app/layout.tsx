@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { siteConfig } from "@/lib/config";
 import { Umami } from "@/components/analytics/Umami";
 
@@ -92,7 +93,9 @@ export default function RootLayout({
         }} />
       </head>
       <body className="font-sans antialiased">
-        <Umami />
+        <Suspense fallback={null}>
+          <Umami />
+        </Suspense>
         {children}
       </body>
     </html>
