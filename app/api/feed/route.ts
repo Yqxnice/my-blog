@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { generateRssFeed } from '@/lib/rss-utils';
 
 export async function GET() {

@@ -2,8 +2,6 @@
 title: 探索 React 18 的新特性
 date: 2024-03-01
 readTime: 5 min
-views: 1234
-comments: 42
 imageUrl: https://api.dicebear.com/7.x/adventurer/svg?seed=React18&backgroundColor=b6e3f4
 tags: [react, javascript, frontend]
 summary: React 18 引入了自动批处理、并发渲染和Suspense改进等新特性，提升了应用性能和开发体验。

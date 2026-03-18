@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 个人博客网站
 
-## Getting Started
+这是一个使用 Next.js 14 构建的个人博客网站，具有现代化的设计和完整的功能。
 
-First, run the development server:
+## 技术栈
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **前端框架**: Next.js 14 (App Router)
+- **样式方案**: Tailwind CSS v4
+- **UI 组件**: shadcn/ui
+- **内容管理**: Markdown 文件
+- **分析工具**: Umami
+- **部署平台**: Vercel
+
+## 功能特点
+
+- ✅ 响应式设计，适配各种设备
+- ✅ 博客文章管理（Markdown 格式）
+- ✅ 文章访问量统计
+- ✅ 标签分类功能
+- ✅ 代码高亮显示
+- ✅ RSS 订阅功能
+- ✅ 404 错误页面
+- ✅ 友链管理
+
+## 快速开始
+
+### 开发环境
+
+1. 克隆仓库
+2. 安装依赖
+   ```bash
+   npm install
+   ```
+3. 启动开发服务器
+   ```bash
+   npm run dev
+   ```
+4. 访问 http://localhost:3000
+
+### 环境变量
+
+在 `.env.local` 文件中配置以下环境变量：
+
+```env
+# Umami 分析配置
+UMAMI_BASE_URL=your-umami-base-url
+UMAMI_USERNAME=your-umami-username
+UMAMI_PASSWORD=your-umami-password
+UMAMI_WEBSITE_ID=your-umami-website-id
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 项目结构
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+├── app/             # Next.js App Router
+│   ├── (blogs)/     # 博客相关页面
+│   ├── api/         # API 路由
+│   ├── layout.tsx   # 全局布局
+│   └── page.tsx     # 首页
+├── components/      # UI 组件
+│   ├── blog/        # 博客相关组件
+│   ├── mdx/         # Markdown 渲染组件
+│   └── ui/          # 通用 UI 组件
+├── content/         # 博客文章（Markdown）
+├── data/            # 静态数据
+├── lib/             # 工具函数
+└── public/          # 静态资源
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 部署
 
-## Learn More
+1. 推送代码到 GitHub 仓库
+2. 登录 Vercel 控制台
+3. 导入项目并配置环境变量
+4. 部署项目
 
-To learn more about Next.js, take a look at the following resources:
+## 贡献
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+欢迎提交 Issue 和 Pull Request！
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 许可证
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

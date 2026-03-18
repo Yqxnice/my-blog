@@ -2,8 +2,6 @@
 title: Node.js 性能优化指南
 date: 2024-02-10
 readTime: 7 min
-views: 1024
-comments: 35
 imageUrl: https://api.dicebear.com/7.x/adventurer/svg?seed=NodeJS&backgroundColor=68a063
 tags: [nodejs, javascript, backend]
 summary: 本文介绍了Node.js性能优化的关键策略，包括内存管理、异步编程、缓存策略以及监控与分析方法。

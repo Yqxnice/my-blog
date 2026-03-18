@@ -1,15 +1,21 @@
 "use client";
-import React, { useState, useEffect, useLayoutEffect, useMemo } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu, Moon, Sun } from "lucide-react";
-import { siteConfig } from "@/lib/config";
+import { siteConfig, type NavItem } from "@/lib/config";
 import me from "../../public/me.jpg";
 
 export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const stored = window.localStorage.getItem("darkMode");
+    if (stored === "true") return true;
+    if (stored === "false") return false;
+    return document.documentElement.classList.contains("dark");
+  });
 
   // 受控显隐的导航项，数据来自配置文件
   const headerTabs = React.useMemo(() => siteConfig.navigation.items, []);
@@ -17,18 +23,6 @@ export function Navbar() {
   const [activeTab, setActiveTab] = useState("首页");
   // 将下划线样式提前声明，避免 useEffect 先访问未定义的状态
   const [underlineStyle, setUnderlineStyle] = useState({ left: "0%", width: "0%" });
-
-  // 初始化深色模式（尽量减少对渲染的副作用）
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains("dark");
-    setIsDarkMode(isDark);
-  }, []);
-
-  // 页面已渲染完成后再进行一些布局相关计算
-  const [hydrated, setHydrated] = useState(false);
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
 
   // 监听路由变化，更新激活标签
   useEffect(() => {
@@ -102,7 +96,7 @@ export function Navbar() {
     localStorage.setItem("darkMode", newDarkMode.toString());
   };
 
-  const handleTabClick = (tab: any) => {
+  const handleTabClick = (tab: NavItem) => {
     // 先跳转路由，让useEffect处理状态更新
     router.push(tab.path);
   };
@@ -173,7 +167,7 @@ export function Navbar() {
               />
               {headerTabs.map((tab, index) => {
                 const isActive = activeTab === tab.title;
-                const Icon = (tab as any).icon;
+                const Icon = tab.icon;
                 return (
                     <Link
                       key={tab.title}
@@ -270,9 +264,9 @@ export function Navbar() {
         {mobileMenuOpen && (
           <div className="md:hidden absolute top-[70px] left-0 right-0 bg-background border-t border-border shadow-md z-50">
             <div className="flex flex-col py-2">
-              {headerTabs.map((tab, idx) => {
+              {headerTabs.map((tab) => {
                 const isActive = activeTab === tab.title;
-                const Icon = (tab as any).icon;
+                const Icon = tab.icon;
                 return (
                   <button
                     key={tab.title}

@@ -1,4 +1,5 @@
 import { Github, Twitter, MessageCircle, Share2, Rss, Mail, House, Book, BookOpen, Clock, BrainCircuit, Link as LinkIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 // 社交媒体链接数据
 export const socialLinks = [
@@ -11,7 +12,7 @@ export const socialLinks = [
 ];
 
 // 统一的导航数据结构：Header 与 Footer 公用
-export type NavItem = { title: string; path: string; icon?: any };
+export type NavItem = { title: string; path: string; icon?: LucideIcon };
 export const navigationItems: NavItem[] = [
   { title: "首页", path: "/", icon: House },
   { title: "博客", path: "/blogs", icon: Book },

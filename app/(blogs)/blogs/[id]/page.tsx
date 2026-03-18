@@ -11,6 +11,21 @@ interface TocItem {
   level: number;
 }
 
+type BlogDetail = {
+  id: string;
+  title: string;
+  excerpt?: string;
+  date: string;
+  imageUrl: string;
+  tags: string[];
+  mdxContent: string;
+  readTime: string;
+  views: number;
+  comments: number;
+  wordCount: number;
+  aiInvolvement?: string;
+};
+
 export default function BlogDetailPage() {
   const router = useRouter();
   // 参数来自 useParams，请先解包再使用
@@ -20,8 +35,9 @@ export default function BlogDetailPage() {
   const [readingProgress, setReadingProgress] = useState(0);
   const [activeHeading, setActiveHeading] = useState<string>('');
   const [showToc, setShowToc] = useState(true);
-  const [blog, setBlog] = useState<any>(null);
+  const [blog, setBlog] = useState<BlogDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pageViews, setPageViews] = useState<number>(0);
 
   // 从 API 获取博客详情
   useEffect(() => {
@@ -30,8 +46,48 @@ export default function BlogDetailPage() {
       try {
         const response = await fetch(`/api/blogs?id=${id}`);
         if (response.ok) {
-          const data = await response.json();
-          setBlog(data);
+          const raw: unknown = await response.json();
+          if (raw && typeof raw === 'object') {
+            const r = raw as Record<string, unknown>;
+            const tags = Array.isArray(r.tags)
+              ? r.tags.filter((t): t is string => typeof t === 'string')
+              : [];
+            const normalized: BlogDetail = {
+              id: String(r.id ?? id),
+              title: String(r.title ?? ''),
+              excerpt: typeof r.excerpt === 'string' ? r.excerpt : undefined,
+              date: String(r.date ?? ''),
+              imageUrl: String(r.imageUrl ?? ''),
+              tags,
+              mdxContent: String(r.mdxContent ?? ''),
+              readTime: String(r.readTime ?? ''),
+              views: Number(r.views ?? 0),
+              comments: Number(r.comments ?? 0),
+              wordCount: Number(r.wordCount ?? 0),
+              aiInvolvement: typeof r.aiInvolvement === 'string' ? r.aiInvolvement : undefined,
+            };
+            setBlog(normalized);
+            
+            // 获取文章访问量
+            try {
+              // 调用本地 API 路由获取页面访问量
+              const response = await fetch(`/api/share?pathname=/blogs/${id}`);
+              if (response.ok) {
+                const result = await response.json();
+                setPageViews(result.pageViews);
+              } else {
+                console.error('Error fetching page views from API:', response.status);
+                // 如果 API 调用失败，使用 0 作为默认值
+                setPageViews(0);
+              }
+            } catch (error) {
+              console.error('Error fetching page views:', error);
+              // 如果发生错误，使用 0 作为默认值
+              setPageViews(0);
+            }
+          } else {
+            setBlog(null);
+          }
         } else {
           setBlog(null);
         }
@@ -214,11 +270,11 @@ export default function BlogDetailPage() {
             </div>
             <div className="flex items-center">
               <Eye size={14} className="mr-1" />
-              <span>{blog.views} 浏览</span>
+              <span>{pageViews || blog.views} 浏览</span>
             </div>
             <div className="flex items-center">
               <MessageSquare size={14} className="mr-1" />
-              <span>{blog.comments} 评论</span>
+              <span>{blog.comments || 0} 评论</span>
             </div>
             <div className="flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -257,13 +313,15 @@ export default function BlogDetailPage() {
           {/* 左栏：博客内容 */}
           <div className="flex-1">
             {/* 博客图片 */}
-            <div className="mb-8">
-              <img
-                src={blog.imageUrl}
-                alt={blog.title}
-                className="w-full h-64 object-cover rounded-xl"
-              />
-            </div>
+            {blog.imageUrl && (
+              <div className="mb-8">
+                <img
+                  src={blog.imageUrl}
+                  alt={blog.title}
+                  className="w-full h-64 object-cover rounded-xl"
+                />
+              </div>
+            )}
 
             {/* 博客摘要 */}
             {blog.excerpt && (

@@ -1,51 +1,36 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
 import { siteConfig } from '@/lib/config';
 
-export function Umami() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
+const Umami = () => {
   useEffect(() => {
-    const { umami } = siteConfig.analytics;
+    // 从配置文件中获取 Umami 配置
+    const { baseUrl, websiteId } = siteConfig.analytics.umami || {};
     
-    if (!umami || !umami.websiteId || !umami.scriptUrl) {
+    // 检查配置是否存在
+    if (!baseUrl || !websiteId) {
       return;
     }
 
-    // 检查 umami 脚本是否已加载
-    if (typeof window !== 'undefined' && !window.umami) {
-      // 创建并加载 umami 脚本
-      const script = document.createElement('script');
-      script.src = umami.scriptUrl;
-      script.async = true;
-      script.defer = true;
-      script.setAttribute('data-website-id', umami.websiteId);
-      
-      // 启用自动跟踪
-      script.setAttribute('data-auto-track', 'true');
-      
-      // 启用缓存
-      script.setAttribute('data-cache', 'true');
-      
-      document.head.appendChild(script);
-    } else if (typeof window !== 'undefined' && window.umami) {
-      // 手动跟踪页面视图
-      const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
-      window.umami('pageview', url);
-    }
-  }, [pathname, searchParams]);
+    // 动态加载 Umami 跟踪脚本
+    const script = document.createElement('script');
+    script.src = `${baseUrl}/script.js`;
+    script.defer = true;
+    script.setAttribute('data-website-id', websiteId);
+    
+    // 添加到 head 标签
+    document.head.appendChild(script);
+
+    // 清理函数
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, []);
 
   return null;
-}
+};
 
-// 事件跟踪钩子
-export function useUmamiEvent() {
-  return function trackEvent(eventName: string, eventData?: Record<string, any>) {
-    if (typeof window !== 'undefined' && window.umami) {
-      window.umami('event', eventName, eventData);
-    }
-  };
-}
+export default Umami;

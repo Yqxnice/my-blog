@@ -3,22 +3,55 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { BlogCardHorizontal } from "@/components/blog/BlogCardHorizontal";
 
+type BlogListItem = {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  readTime: string;
+  views: number;
+  comments: number;
+  imageUrl: string;
+  slug: string;
+  tags: string[];
+};
+
 export default function TagsPage() {
-  const [blogs, setBlogs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState<BlogListItem[]>([]);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
         const response = await fetch("/api/blogs");
         if (response.ok) {
-          const data = await response.json();
-          setBlogs(data);
+          const data: unknown = await response.json();
+          const arr = Array.isArray(data) ? data : [];
+          const normalized: BlogListItem[] = arr
+            .map((raw) => {
+              if (!raw || typeof raw !== "object") return null;
+              const r = raw as Record<string, unknown>;
+              const tags = Array.isArray(r.tags)
+                ? r.tags.filter((t): t is string => typeof t === "string")
+                : [];
+              return {
+                id: String(r.id ?? ""),
+                title: String(r.title ?? ""),
+                excerpt: String(r.excerpt ?? ""),
+                date: String(r.date ?? ""),
+                readTime: String(r.readTime ?? ""),
+                views: Number(r.views ?? 0),
+                comments: Number(r.comments ?? 0),
+                imageUrl: String(r.imageUrl ?? ""),
+                slug: String(r.slug ?? r.id ?? ""),
+                tags,
+              };
+            })
+            .filter((x): x is BlogListItem => x !== null);
+
+          setBlogs(normalized);
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
-      } finally {
-        setLoading(false);
       }
     };
 

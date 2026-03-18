@@ -73,17 +73,21 @@ export const siteConfig = {
   
   // 分析工具配置
   analytics: {
-    googleAnalyticsId: 'UA-123456789-1', // Google Analytics ID
+    googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID, // Google Analytics ID
     
     // Umami 分析配置（自托管实例）
     umami: {
-      // 网站 ID，在 umami 后台创建网站时生成
-      websiteId: 'd534e79f-c215-4e1a-bdc6-bf562571e167',
+      // Umami 实例基础 URL
+      baseUrl: process.env.UMAMI_BASE_URL,
       
-      // umami 跟踪脚本 URL
-      // 格式: http://your-umami-instance.com/script.js
-      // 例如: http://localhost:3000/script.js
-      scriptUrl: 'http://umami.w-blogs.top/script.js'
+      // Umami 用户名
+      username: process.env.UMAMI_USERNAME,
+      
+      // Umami 密码
+      password: process.env.UMAMI_PASSWORD,
+      
+      // 网站 ID
+      websiteId: process.env.UMAMI_WEBSITE_ID
     }
   }
 };

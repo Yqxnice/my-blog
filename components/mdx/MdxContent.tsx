@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -68,20 +68,24 @@ const MdxContent: React.FC<MdxContentProps> = ({ source }) => {
             </a>
           );
         },
-        code({ node, inline, className, children, ...props }: any) {
-          const match = /language-(\w+)/.exec(className || '');
-          return !inline && match ? (
+        code(props) {
+          const p = props as {
+            inline?: boolean;
+            className?: string;
+            children?: React.ReactNode;
+          } & Record<string, unknown>;
+          const match = /language-(\w+)/.exec(p.className || '');
+          return !p.inline && match ? (
             <SyntaxHighlighter
               style={vscDarkPlus}
               language={match[1]}
               PreTag="div"
-              {...props}
             >
-              {String(children).replace(/\n$/, '')}
+              {String(p.children).replace(/\n$/, '')}
             </SyntaxHighlighter>
           ) : (
-            <code className={className} {...props}>
-              {children}
+            <code className={p.className}>
+              {p.children}
             </code>
           );
         },

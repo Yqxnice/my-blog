@@ -2,8 +2,6 @@
 title: Vue 3 Composition API 实践
 date: 2024-02-05
 readTime: 6 min
-views: 896
-comments: 29
 imageUrl: https://api.dicebear.com/7.x/adventurer/svg?seed=Vue&backgroundColor=41b883
 tags: [vue, javascript, frontend]
 summary: 本文介绍了Vue 3 Composition API的基本用法、响应式系统、生命周期钩子以及其优势，帮助开发者更好地组织和复用代码。

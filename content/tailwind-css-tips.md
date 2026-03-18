@@ -2,8 +2,6 @@
 title: Tailwind CSS 实用技巧
 date: 2024-02-20
 readTime: 4 min
-views: 987
-comments: 28
 imageUrl: https://api.dicebear.com/7.x/adventurer/svg?seed=Tailwind&backgroundColor=ffd93d
 tags: [css, tailwind, frontend]
 summary: 本文分享了Tailwind CSS的实用技巧，包括自定义工具类、响应式设计、深色模式实现以及最佳实践。

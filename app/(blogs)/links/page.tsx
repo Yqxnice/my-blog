@@ -4,14 +4,22 @@ import { LinkCard, LinkItem } from "../../../components/links/LinkCard";
 import remoteLinksJson from "../../../data/friends.json";
 
 // 将外部数据源 data/friends.json 映射为 LinkItem[]，以匹配 LinkCard 的类型定义
-const remoteLinksFromJson: LinkItem[] = (remoteLinksJson as any[]).map((f, idx) => ({
-  id: `remote-${idx}`,
-  name: f.name ?? "",
-  url: f.url ?? "",
-  description: f.description ?? "",
-  logo: f.logo ?? "",
-  author: f.author ?? "",
-}));
+const remoteLinksFromJson: LinkItem[] = (Array.isArray(remoteLinksJson) ? remoteLinksJson : []).map(
+  (raw, idx) => {
+    const f = (raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {}) as Record<
+      string,
+      unknown
+    >;
+    return {
+      id: `remote-${idx}`,
+      name: String(f.name ?? ""),
+      url: String(f.url ?? ""),
+      description: String(f.description ?? ""),
+      logo: String(f.logo ?? ""),
+      author: String(f.author ?? ""),
+    };
+  },
+);
 
 export default function LinksPage() {
   const [links, setLinks] = useState<LinkItem[]>(remoteLinksFromJson);

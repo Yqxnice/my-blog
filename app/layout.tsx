@@ -2,7 +2,8 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { siteConfig } from "@/lib/config";
-import { Umami } from "@/components/analytics/Umami";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Umami from "@/components/analytics/Umami";
 
 export const metadata: Metadata = {
   title: {
@@ -94,6 +95,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
+          <SpeedInsights />
           <Umami />
         </Suspense>
         {children}
