@@ -26,6 +26,37 @@ type BlogDetail = {
   aiInvolvement?: string;
 };
 
+declare global {
+  interface Window {
+    __blogDetailCache?: Record<
+      string,
+      {
+        blog: BlogDetail | null;
+        pageViews: number;
+        ts: number;
+      }
+    >;
+  }
+}
+
+const BLOG_DETAIL_CACHE_TTL_MS = 5 * 60 * 1000;
+
+function readBlogDetailCache(id: string) {
+  if (typeof window === 'undefined') return null;
+  const cache = window.__blogDetailCache;
+  if (!cache) return null;
+  const entry = cache[id];
+  if (!entry) return null;
+  if (Date.now() - entry.ts > BLOG_DETAIL_CACHE_TTL_MS) return null;
+  return entry;
+}
+
+function writeBlogDetailCache(id: string, entry: { blog: BlogDetail | null; pageViews: number }) {
+  if (typeof window === 'undefined') return;
+  window.__blogDetailCache ??= {};
+  window.__blogDetailCache[id] = { ...entry, ts: Date.now() };
+}
+
 export default function BlogDetailPage() {
   const router = useRouter();
   // 参数来自 useParams，请先解包再使用
@@ -44,6 +75,14 @@ export default function BlogDetailPage() {
     const fetchBlog = async () => {
       setLoading(true);
       try {
+        const cached = readBlogDetailCache(id);
+        if (cached) {
+          setBlog(cached.blog);
+          setPageViews(cached.pageViews);
+          setLoading(false);
+          return;
+        }
+
         const response = await fetch(`/api/blogs?id=${id}`);
         if (response.ok) {
           const raw: unknown = await response.json();
@@ -69,27 +108,35 @@ export default function BlogDetailPage() {
             setBlog(normalized);
             
             // 获取文章访问量
+            let resolvedPageViews = 0;
             try {
               // 调用本地 API 路由获取页面访问量
               const response = await fetch(`/api/share?pathname=/blogs/${id}`);
               if (response.ok) {
                 const result = await response.json();
-                setPageViews(result.pageViews);
+                resolvedPageViews = Number(result?.pageViews ?? 0);
+                setPageViews(resolvedPageViews);
               } else {
                 console.error('Error fetching page views from API:', response.status);
                 // 如果 API 调用失败，使用 0 作为默认值
-                setPageViews(0);
+                resolvedPageViews = 0;
+                setPageViews(resolvedPageViews);
               }
             } catch (error) {
               console.error('Error fetching page views:', error);
               // 如果发生错误，使用 0 作为默认值
-              setPageViews(0);
+              resolvedPageViews = 0;
+              setPageViews(resolvedPageViews);
             }
+
+            writeBlogDetailCache(id, { blog: normalized, pageViews: resolvedPageViews });
           } else {
             setBlog(null);
+            writeBlogDetailCache(id, { blog: null, pageViews: 0 });
           }
         } else {
           setBlog(null);
+          writeBlogDetailCache(id, { blog: null, pageViews: 0 });
         }
       } catch (error) {
         console.error('Error fetching blog:', error);

@@ -73,12 +73,12 @@ export const siteConfig = {
   
   // 分析工具配置
   analytics: {
-    googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID, // Google Analytics ID
+    googleAnalyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID, // Google Analytics ID
     
     // Umami 分析配置（自托管实例）
     umami: {
       // Umami 实例基础 URL
-      baseUrl: process.env.UMAMI_BASE_URL,
+      baseUrl: process.env.NEXT_PUBLIC_UMAMI_BASE_URL,
       
       // Umami 用户名
       username: process.env.UMAMI_USERNAME,
@@ -87,7 +87,7 @@ export const siteConfig = {
       password: process.env.UMAMI_PASSWORD,
       
       // 网站 ID
-      websiteId: process.env.UMAMI_WEBSITE_ID
+      websiteId: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID
     }
   }
 };
