@@ -1,0 +1,21 @@
+{
+  "name": "木子博客",
+  "short_name": "木子博客",
+  "description": "独立开发者的技术与生活，分享前端开发、后端技术、工具使用等内容",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+      "type": "image/x-icon",
+      "purpose": "any"
+    }
+  ],
+  "orientation": "portrait",
+  "categories": ["technology", "blog", "programming"],
+  "lang": "zh-CN",
+  "dir": "ltr"
+}

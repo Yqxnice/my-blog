@@ -1,46 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-// 已通过第一处导入引入 Link，避免重复导入
-import { ArrowUpToLine } from "lucide-react";
+import React from "react";
 import { socialLinks, navigationItems } from "@/data/contact";
 import Link from "next/link";
 
 export function Footer() {
-  const [showBackToTop, setShowBackToTop] = useState(false);
-
-  // 监听滚动，控制回到顶部按钮显示
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 300);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // 回到顶部功能
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <footer className="bg-background border-t border-border mt-auto">
-      {/* 回到顶部按钮 */}
-      <div className="relative">
-        {showBackToTop && (
-          <button
-            onClick={scrollToTop}
-            className="absolute -top-10 right-4 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:bg-primary/90 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
-            aria-label="回到顶部"
-          >
-            <ArrowUpToLine size={20} />
-          </button>
-        )}
-      </div>
 
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-12">
         {/* 导航链接区（Footer，统一数据源 navigationItems） */}

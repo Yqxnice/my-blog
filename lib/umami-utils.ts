@@ -5,8 +5,23 @@ const TOKEN_CACHE_KEY = "umami-token-cache";
 const CACHE_TTL = 3600_000; // 1h
 
 // 内存缓存
-let memoryCache: Map<string, any> | null = null;
+interface CacheItem {
+  data: any;
+  timestamp: number;
+}
+
+let memoryCache: Map<string, CacheItem> | null = null;
 let tokenPromise: Promise<string> | null = null;
+
+/**
+ * 检查缓存是否有效
+ * @param cacheItem 缓存项
+ * @param ttl 过期时间（毫秒）
+ * @returns 是否有效
+ */
+function isCacheValid(cacheItem: CacheItem | undefined, ttl: number): boolean {
+  return cacheItem !== undefined && Date.now() - cacheItem.timestamp < ttl;
+}
 
 /**
  * 初始化内存缓存
@@ -156,7 +171,9 @@ async function umamiApiRequest(
       }
       throw new Error(`Umami API 请求失败: ${res.status} ${res.statusText}`);
     }
-    return await res.json();
+    const data = await res.json();
+
+    return data;
   } catch (error) {
     // 清除失败的 promise
     tokenPromise = null;
@@ -187,10 +204,15 @@ export async function fetchUmamiStats(
   const cacheKey = `${baseUrl}|${websiteId}|${JSON.stringify(queryParams)}`;
   
   // 检查内存缓存
-  if (memoryCache?.has(cacheKey)) {
-    const data = memoryCache.get(cacheKey);
-    return { ...data, _fromCache: true };
-  }
+    if (memoryCache?.has(cacheKey)) {
+      const cacheItem = memoryCache.get(cacheKey);
+      if (cacheItem && isCacheValid(cacheItem, CACHE_TTL)) {
+        return { ...cacheItem.data, _fromCache: true };
+      } else {
+        // 缓存过期，移除
+        memoryCache.delete(cacheKey);
+      }
+    }
 
   try {
     const currentTimestamp = Date.now();
@@ -212,7 +234,7 @@ export async function fetchUmamiStats(
     );
 
     // 写入内存缓存
-    memoryCache?.set(cacheKey, data);
+    memoryCache?.set(cacheKey, { data, timestamp: Date.now() });
     return data;
   } catch (error) {
     throw error;
@@ -242,10 +264,15 @@ export async function fetchPageViews(
   const cacheKey = `${baseUrl}|${websiteId}|pageviews|${pagePath}`;
   
   // 检查内存缓存
-  if (memoryCache?.has(cacheKey)) {
-    const data = memoryCache.get(cacheKey);
-    return data;
-  }
+    if (memoryCache?.has(cacheKey)) {
+      const cacheItem = memoryCache.get(cacheKey);
+      if (cacheItem && isCacheValid(cacheItem, CACHE_TTL)) {
+        return cacheItem.data;
+      } else {
+        // 缓存过期，移除
+        memoryCache.delete(cacheKey);
+      }
+    }
 
   try {
     const currentTimestamp = Date.now();
@@ -269,7 +296,7 @@ export async function fetchPageViews(
     const pageViews = data.pageviews || 0;
     
     // 写入内存缓存
-    memoryCache?.set(cacheKey, pageViews);
+    memoryCache?.set(cacheKey, { data: pageViews, timestamp: Date.now() });
     return pageViews;
   } catch (error) {
     throw error;

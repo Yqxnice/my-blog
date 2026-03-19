@@ -12,3 +12,4 @@ export default function BlogDetailPageServer({ params }: { params: { id: string 
 
   return <BlogDetailPage />;
 }
+

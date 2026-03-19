@@ -4,6 +4,10 @@ import { Suspense } from "react";
 import { siteConfig } from "@/lib/config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Umami from "@/components/analytics/Umami";
+import { Navbar } from "@/components/blog/Navbar";
+import { Footer } from "@/components/blog/Footer";
+import { LoadingBar } from "@/components/blog/LoadingBar";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const metadata: Metadata = {
   title: {
@@ -59,46 +63,65 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning className="scroll-smooth">
       <head>
-        {/* 深色模式预加载脚本，避免闪烁 */}
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            // 检查 localStorage 中的深色模式设置
-            const savedDarkMode = localStorage.getItem('darkMode');
-            if (savedDarkMode === 'true' || (!savedDarkMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-              document.documentElement.classList.add('dark');
-            }
-          `
-        }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // 深色模式初始化脚本，避免页面闪烁
+              if (typeof window !== 'undefined') {
+                const savedDarkMode = window.localStorage.getItem('darkMode');
+                let enabled = false;
+                
+                if (savedDarkMode === 'true') {
+                  enabled = true;
+                } else if (savedDarkMode === 'false') {
+                  enabled = false;
+                } else {
+                  // 没有显式设置时，根据系统偏好决定
+                  enabled = window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches;
+                }
+                
+                if (enabled) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              }
+            `
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;700;900&display=swap"
           rel="stylesheet"
         />
-        {/* RSS 订阅链接 */}
         <link
           rel="alternate"
           type="application/rss+xml"
           title="木子博客 RSS 订阅"
           href="/feed.xml"
         />
-        <style dangerouslySetInnerHTML={{
-          __html: `
-            html {
-              transition: background-color 0.3s ease, color 0.3s ease;
-            }
-            html *, html *::before, html *::after {
-              transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            }
-          `
-        }} />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-mobile-web-app-title" content="木子博客" />
+        <link rel="apple-touch-icon" href="/favicon.ico" />
       </head>
       <body className="font-sans antialiased">
         <Suspense fallback={null}>
           <SpeedInsights />
           <Umami />
+          <ServiceWorkerRegister />
         </Suspense>
-        {children}
+        <LoadingBar />
+        <Navbar />
+        <main className="min-h-screen w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

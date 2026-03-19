@@ -29,13 +29,17 @@ export function BlogCardHorizontal({
       aria-label={`Read blog post: ${title}`}
     >
       {/* 博客图片 */}
-      <div className="relative w-full md:w-1/3 h-48 md:h-auto overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
+      {imageUrl && imageUrl !== '' && (
+        <div className="relative w-full md:w-1/3 h-48 md:h-auto overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+      )}
       
       {/* 博客内容 */}
       <div className="flex-1 p-6">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Calendar, Clock, Eye, MessageSquare, ArrowLeft, List } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
 import MdxContent from '@/components/mdx/MdxContent';
@@ -59,7 +59,6 @@ function writeBlogDetailCache(id: string, entry: { blog: BlogDetail | null; page
 
 export default function BlogDetailPage() {
   const router = useRouter();
-  // 参数来自 useParams，请先解包再使用
   const params = useParams();
   const idRaw = params?.id;
   const id = Array.isArray(idRaw) ? idRaw[0] : (idRaw ?? '');
@@ -70,7 +69,6 @@ export default function BlogDetailPage() {
   const [loading, setLoading] = useState(true);
   const [pageViews, setPageViews] = useState<number>(0);
 
-  // 从 API 获取博客详情
   useEffect(() => {
     const fetchBlog = async () => {
       setLoading(true);
@@ -106,25 +104,19 @@ export default function BlogDetailPage() {
               aiInvolvement: typeof r.aiInvolvement === 'string' ? r.aiInvolvement : undefined,
             };
             setBlog(normalized);
-            
-            // 获取文章访问量
+
             let resolvedPageViews = 0;
             try {
-              // 调用本地 API 路由获取页面访问量
               const response = await fetch(`/api/share?pathname=/blogs/${id}`);
               if (response.ok) {
                 const result = await response.json();
                 resolvedPageViews = Number(result?.pageViews ?? 0);
                 setPageViews(resolvedPageViews);
               } else {
-                console.error('Error fetching page views from API:', response.status);
-                // 如果 API 调用失败，使用 0 作为默认值
                 resolvedPageViews = 0;
                 setPageViews(resolvedPageViews);
               }
-            } catch (error) {
-              console.error('Error fetching page views:', error);
-              // 如果发生错误，使用 0 作为默认值
+            } catch {
               resolvedPageViews = 0;
               setPageViews(resolvedPageViews);
             }
@@ -138,8 +130,7 @@ export default function BlogDetailPage() {
           setBlog(null);
           writeBlogDetailCache(id, { blog: null, pageViews: 0 });
         }
-      } catch (error) {
-        console.error('Error fetching blog:', error);
+      } catch {
         setBlog(null);
       } finally {
         setLoading(false);
@@ -173,7 +164,7 @@ export default function BlogDetailPage() {
   useEffect(() => {
     const handleScroll = () => {
       if (!blog) return;
-      
+
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = (scrollTop / docHeight) * 100;
@@ -195,8 +186,6 @@ export default function BlogDetailPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [blog]);
-
-  // 博客数据已直接通过 blog 常量获取，无需在 effect 中设置
 
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
@@ -251,13 +240,11 @@ export default function BlogDetailPage() {
 
   return (
     <div className="min-h-screen">
-      {/* 阅读进度条 */}
-      <div 
+      <div
         className="fixed top-0 left-0 right-0 h-1 bg-primary z-50 transition-all duration-100"
         style={{ width: `${readingProgress}%` }}
       />
-      
-      {/* JSON-LD 结构化数据 */}
+
       {blog && (
         <script
           type="application/ld+json"
@@ -265,31 +252,30 @@ export default function BlogDetailPage() {
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'BlogPosting',
-              'headline': blog.title,
-              'description': blog.excerpt,
-              'datePublished': blog.date,
-              'image': blog.imageUrl,
-              'author': {
+              headline: blog.title,
+              description: blog.excerpt,
+              datePublished: blog.date,
+              image: blog.imageUrl,
+              author: {
                 '@type': 'Person',
-                'name': '木子'
+                name: '木子',
               },
-              'publisher': {
+              publisher: {
                 '@type': 'Organization',
-                'name': '木子博客',
-                'logo': {
+                name: '木子博客',
+                logo: {
                   '@type': 'ImageObject',
-                  'url': '/favicon.ico'
-                }
+                  url: '/favicon.ico',
+                },
               },
-              'keywords': blog.tags.join(', '),
-              'wordCount': blog.wordCount
-            })
+              keywords: blog.tags.join(', '),
+              wordCount: blog.wordCount,
+            }),
           }}
         />
       )}
-      
+
       <div className="w-full py-12">
-        {/* 返回按钮 */}
         <div className="flex items-center mb-6">
           <button
             onClick={() => router.back()}
@@ -301,11 +287,9 @@ export default function BlogDetailPage() {
           </button>
         </div>
 
-        {/* 博客标题 */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-foreground">{blog.title}</h1>
-          
-          {/* 博客元数据 */}
+
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center">
               <Calendar size={14} className="mr-1" />
@@ -324,22 +308,17 @@ export default function BlogDetailPage() {
               <span>{blog.comments || 0} 评论</span>
             </div>
             <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <span>{blog.wordCount} 字</span>
+              <span className="mr-1">字数</span>
+              <span>{blog.wordCount}</span>
             </div>
             {blog.aiInvolvement && (
               <div className="flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                </svg>
-                <span>AI: {blog.aiInvolvement}</span>
+                <span className="mr-1">AI</span>
+                <span>{blog.aiInvolvement}</span>
               </div>
             )}
           </div>
 
-          {/* 博客标签 */}
           {blog.tags && blog.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-4">
               {blog.tags.map((tag: string) => (
@@ -355,22 +334,14 @@ export default function BlogDetailPage() {
           )}
         </div>
 
-        {/* 博客内容 - 左右布局 */}
         <div className="flex flex-col lg:flex-row gap-8 mb-12">
-          {/* 左栏：博客内容 */}
           <div className="flex-1">
-            {/* 博客图片 */}
             {blog.imageUrl && (
               <div className="mb-8">
-                <img
-                  src={blog.imageUrl}
-                  alt={blog.title}
-                  className="w-full h-64 object-cover rounded-xl"
-                />
+                <img src={blog.imageUrl} alt={blog.title} className="w-full h-64 object-cover rounded-xl" />
               </div>
             )}
 
-            {/* 博客摘要 */}
             {blog.excerpt && (
               <div className="mb-8 p-4 bg-muted/50 rounded-lg border border-border">
                 <p className="text-muted-foreground italic">{blog.excerpt}</p>
@@ -382,7 +353,6 @@ export default function BlogDetailPage() {
             </div>
           </div>
 
-          {/* 右栏：目录 */}
           {toc.length > 0 && (
             <div className={`lg:w-64 shrink-0 ${showToc ? 'block' : 'hidden lg:block'}`}>
               <div className="lg:sticky lg:top-24 bg-card border border-border rounded-xl p-4">
@@ -403,9 +373,7 @@ export default function BlogDetailPage() {
                       onClick={() => scrollToHeading(item.id)}
                       className={`block w-full text-left text-sm py-1 transition-colors ${
                         item.level === 1 ? 'font-medium' : ''
-                      } ${
-                        item.level === 2 ? 'pl-4' : ''
-                      } ${
+                      } ${item.level === 2 ? 'pl-4' : ''} ${
                         item.level === 3 ? 'pl-8' : ''
                       } ${
                         activeHeading === item.id
@@ -422,7 +390,6 @@ export default function BlogDetailPage() {
           )}
         </div>
 
-        {/* 评论区 */}
         <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="text-xl font-semibold mb-4">评论 ({blog.comments})</h2>
           <div className="space-y-4">
@@ -456,3 +423,4 @@ export default function BlogDetailPage() {
     </div>
   );
 }
+

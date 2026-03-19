@@ -3,7 +3,7 @@ import { generateRssFeed } from '@/lib/rss-utils';
 
 export async function GET() {
   const rssFeed = generateRssFeed();
-  
+
   return new NextResponse(rssFeed, {
     headers: {
       'Content-Type': 'application/rss+xml; charset=utf-8',
@@ -11,3 +11,4 @@ export async function GET() {
     },
   });
 }
+

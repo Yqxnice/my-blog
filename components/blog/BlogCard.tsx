@@ -29,13 +29,17 @@ export function BlogCard({
       aria-label={`Read blog post: ${title}`}
     >
       {/* 博客图片 - 大图展示 */}
-      <div className="aspect-[16/9] overflow-hidden">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      </div>
+      {imageUrl && imageUrl !== '' && (
+        <div className="aspect-[16/9] overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        </div>
+      )}
       
       {/* 博客内容 */}
       <div className="p-6">

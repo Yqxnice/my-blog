@@ -1,124 +1,36 @@
 "use client";
-import React, { useState, useEffect, useLayoutEffect } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Menu, Moon, Sun } from "lucide-react";
 import { siteConfig, type NavItem } from "@/lib/config";
+import { useDarkMode } from "@/lib/use-dark-mode";
+import { useScrollY } from "@/lib/use-scroll-y";
+import { useActiveNavTab } from "@/lib/use-active-nav-tab";
 import me from "../../public/me.jpg";
+import { NavTabs } from "@/components/blog/NavTabs";
 
 export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const stored = window.localStorage.getItem("darkMode");
-    if (stored === "true") return true;
-    if (stored === "false") return false;
-    return document.documentElement.classList.contains("dark");
-  });
+  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   // 受控显隐的导航项，数据来自配置文件
   const headerTabs = React.useMemo(() => siteConfig.navigation.items, []);
-  // 管理当前激活的标签
-  const [activeTab, setActiveTab] = useState("首页");
-  // 将下划线样式提前声明，避免 useEffect 先访问未定义的状态
-  const [underlineStyle, setUnderlineStyle] = useState({ left: "0%", width: "0%" });
-
-  // 监听路由变化，更新激活标签
-  useEffect(() => {
-    // 找到匹配的标签，优先精确匹配，再匹配父路径
-    let matchedTab = headerTabs.find((tab) => pathname === tab.path);
-
-    // 如果没有精确匹配，尝试匹配父路径
-    if (!matchedTab) {
-      matchedTab = headerTabs.find((tab) => {
-        // 匹配博客页面
-        if (tab.path === "/blogs" && pathname.startsWith("/blogs/")) {
-          return true;
-        }
-        return false;
-      });
-    }
-
-    if (matchedTab) {
-      // 只在标签实际变化时更新状态
-      if (matchedTab.title !== activeTab) {
-        setTimeout(() => setActiveTab(matchedTab.title), 0);
-      }
-    }
-  }, [pathname, headerTabs, activeTab]);
-
-  // 更新激活下划线的位置和宽度
-  useLayoutEffect(() => {
-    const activeIndex = headerTabs.findIndex((tab) => tab.title === activeTab);
-    const activeTabElement = tabRefs.current[activeIndex];
-    
-    if (activeTabElement) {
-      const navElement = activeTabElement.parentElement;
-      if (navElement) {
-        const navRect = navElement.getBoundingClientRect();
-        const tabRect = activeTabElement.getBoundingClientRect();
-        
-        // 获取tab元素的实际padding值
-        const computedStyle = window.getComputedStyle(activeTabElement);
-        const paddingLeft = parseFloat(computedStyle.paddingLeft);
-        const paddingRight = parseFloat(computedStyle.paddingRight);
-        
-        // 计算padding总和
-        const paddingTotal = paddingLeft + paddingRight;
-        
-        // 计算调整后的宽度（减去padding）
-        const adjustedTabWidth = tabRect.width - paddingTotal;
-        
-        // 计算调整后的左侧位置（加上左侧padding）
-        const adjustedLeft = tabRect.left - navRect.left + paddingLeft;
-        
-        const left = (adjustedLeft / navRect.width) * 100;
-        const width = (adjustedTabWidth / navRect.width) * 100;
-        setUnderlineStyle({ left: `${left}%`, width: `${width}%` });
-      }
-    }
-  }, [activeTab, headerTabs]);
-
-  // 切换深色模式
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-
-    // 更新DOM
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-    // 保存到localStorage
-    localStorage.setItem("darkMode", newDarkMode.toString());
-  };
+  const derivedActiveTab = useActiveNavTab(pathname, headerTabs);
+  const [activeTab, setActiveTab] = useState(derivedActiveTab);
 
   const handleTabClick = (tab: NavItem) => {
-    // 先跳转路由，让useEffect处理状态更新
+    // 提前更新高亮，提升点击反馈；路由切换后 derivedActiveTab 会保持一致
+    setActiveTab(tab.title);
     router.push(tab.path);
   };
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-  const tabRefs = React.useRef<(HTMLAnchorElement | null)[]>([]);
+  const scrollY = useScrollY();
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   // 计算导航栏透明度
   const getNavbarOpacity = () => {
@@ -155,43 +67,7 @@ export function Navbar() {
 
           {/* 中间：胶囊导航菜单 */}
           <div className="flex flex-2/3 justify-center">
-            <nav className="flex items-center justify-center bg-background/80 backdrop-blur-sm border border-border/50 rounded-full px-8 h-[52px] shadow-md relative transition-all duration-300 hover:shadow-lg min-w-[400px] md:min-w-[500px] lg:min-w-[600px]">
-              {/* 移动的激活指示器 */}
-              <span
-                className="absolute bottom-2 h-[3px] bg-primary rounded-full transition-all duration-500 ease-in-out"
-                style={{
-                  left: underlineStyle.left,
-                  width: underlineStyle.width,
-                  transform: "none",
-                }}
-              />
-              {headerTabs.map((tab, index) => {
-                const isActive = activeTab === tab.title;
-                const Icon = tab.icon;
-                return (
-                    <Link
-                      key={tab.title}
-                      href={tab.path}
-                      ref={(el) => { tabRefs.current[index] = el; }}
-                      className={`text-sm font-medium flex items-center justify-center h-full relative transition-all duration-300 ${isActive ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
-                      style={{ padding: "0 24px", flex: "0 0 auto" }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleTabClick(tab);
-                      }}
-                    >
-                    {isActive && Icon && (
-                      <span className="mr-2 transition-all duration-300 opacity-100 scale-100 w-5" style={{ flexShrink: 0 }}>
-                        <Icon size={18} className="transition-all duration-300 text-primary" />
-                      </span>
-                    )}
-                    <span className="transition-all duration-300">
-                      {tab.title}
-                    </span>
-                  </Link>
-                );
-              })}
-            </nav>
+            <NavTabs tabs={headerTabs} activeTitle={activeTab || derivedActiveTab} onTabClick={handleTabClick} />
           </div>
 
           {/* 右侧：圆形图标按钮 */}
@@ -265,7 +141,7 @@ export function Navbar() {
           <div className="md:hidden absolute top-[70px] left-0 right-0 bg-background border-t border-border shadow-md z-50">
             <div className="flex flex-col py-2">
               {headerTabs.map((tab) => {
-                const isActive = activeTab === tab.title;
+                const isActive = (activeTab || derivedActiveTab) === tab.title;
                 const Icon = tab.icon;
                 return (
                   <button

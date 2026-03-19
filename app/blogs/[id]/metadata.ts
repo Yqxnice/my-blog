@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/config';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const blog = getBlogById(params.id);
-  
+
   if (!blog) {
     return {
       title: '博客不存在 - ' + siteConfig.name,
@@ -46,3 +46,4 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
     },
   };
 }
+

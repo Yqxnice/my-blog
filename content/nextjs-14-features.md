@@ -1,13 +1,12 @@
-***
-
+---
 title: Next.js 14 新功能详解
 date: 2024-02-15
 readTime: 6 min
 imageUrl: <https://api.dicebear.com/7.x/adventurer/svg?seed=NextJS&backgroundColor=6bcb77>
-tags: \[nextjs, react, javascript]
+tags: [nextjs, react, javascript]
 summary: Next.js 14 带来了App Router改进、Server Actions、增强的静态站点生成、性能优化和开发体验改进等多项新特性。
 aiInvolvement: 辅助创作
--------------------
+---
 
 # Next.js 14 新功能详解
 

@@ -1,9 +1,9 @@
 "use client";
-import React, { useMemo, useState, FormEvent } from "react";
-import { LinkCard, LinkItem } from "../../../components/links/LinkCard";
-import remoteLinksJson from "../../../data/friends.json";
 
-// 将外部数据源 data/friends.json 映射为 LinkItem[]，以匹配 LinkCard 的类型定义
+import React, { FormEvent, useMemo, useState } from "react";
+import { LinkCard, LinkItem } from "../../components/links/LinkCard";
+import remoteLinksJson from "../../data/friends.json";
+
 const remoteLinksFromJson: LinkItem[] = (Array.isArray(remoteLinksJson) ? remoteLinksJson : []).map(
   (raw, idx) => {
     const f = (raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {}) as Record<
@@ -84,3 +84,4 @@ export default function LinksPage() {
     </div>
   );
 }
+

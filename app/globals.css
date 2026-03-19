@@ -143,3 +143,10 @@
     transform: scale(1);
   }
 }
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
