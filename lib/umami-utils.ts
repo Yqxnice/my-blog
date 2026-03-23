@@ -1,3 +1,8 @@
+/**
+ * 功能：Umami分析数据工具函数
+ * 目的：提供Umami分析服务的数据获取和处理功能
+ * 作者：Yqxnice
+ */
 // Umami 分析数据工具函数
 
 // 缓存键和过期时间
@@ -6,7 +11,7 @@ const CACHE_TTL = 3600_000; // 1h
 
 // 内存缓存
 interface CacheItem {
-  data: any;
+  data: unknown;
   timestamp: number;
 }
 
@@ -195,7 +200,7 @@ export async function fetchUmamiStats(
   username: string,
   password: string,
   websiteId: string,
-  queryParams: any = {}
+  queryParams: Record<string, string | number> = {}
 ) {
   // 初始化内存缓存
   initializeMemoryCache();
@@ -207,7 +212,7 @@ export async function fetchUmamiStats(
     if (memoryCache?.has(cacheKey)) {
       const cacheItem = memoryCache.get(cacheKey);
       if (cacheItem && isCacheValid(cacheItem, CACHE_TTL)) {
-        return { ...cacheItem.data, _fromCache: true };
+        return { ...(cacheItem.data as Record<string, unknown>), _fromCache: true };
       } else {
         // 缓存过期，移除
         memoryCache.delete(cacheKey);
@@ -216,13 +221,15 @@ export async function fetchUmamiStats(
 
   try {
     const currentTimestamp = Date.now();
-    const params = {
+    const params: Record<string, string> = {
       startAt: '0',
       endAt: currentTimestamp.toString(),
       unit: "hour",
-      timezone: queryParams.timezone || "Asia/Shanghai",
+      timezone: String(queryParams.timezone || "Asia/Shanghai"),
       compare: "false",
-      ...queryParams,
+      ...Object.fromEntries(
+        Object.entries(queryParams).map(([k, v]) => [k, String(v)])
+      ),
     };
 
     const data = await umamiApiRequest(

@@ -1,3 +1,8 @@
+/**
+ * 功能：友情链接 API 路由
+ * 目的：提供友情链接数据
+ * 作者：Yqxnice
+ */
 import { NextResponse } from 'next/server';
 
 type LinkItem = {

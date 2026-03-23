@@ -1,0 +1,132 @@
+---
+title: "测试 MDX 功能"
+date: "2026-03-22"
+description: "测试所有 MDX 增强功能"
+tags: ["test", "mdx", "features"]
+coverImage: "/placeholder-image.jpg"
+wordCount: 1000
+readingTime: 5
+---
+
+# 测试 MDX 功能
+
+## 基本 Markdown 语法
+
+这是一段普通的文本，包含**粗体**和*斜体*。
+
+- 无序列表项 1
+- 无序列表项 2
+- 无序列表项 3
+
+1. 有序列表项 1
+2. 有序列表项 2
+3. 有序列表项 3
+
+## GFM 支持
+
+### 表格
+
+| 名称 | 描述 | 值 |
+|------|------|----|
+| React | 前端框架 | 18.2.0 |
+| Next.js | 框架 | 16.1.6 |
+| Tailwind CSS | 样式框架 | 4.2.1 |
+
+### 任务列表
+
+- [x] 完成 MDX 功能测试
+- [x] 实现图片灯箱效果
+- [ ] 优化性能
+
+## 图片灯箱效果
+
+![测试图片](https://neeko-copilot.bytedance.net/api/text2image?prompt=beautiful%20landscape%20with%20mountains%20and%20lake&size=1024x768)
+
+## 代码块
+
+### 代码块文件名显示
+
+```jsx title="Component.tsx"
+function Component() {
+  return (
+    <div className="container">
+      <h1>Hello World</h1>
+    </div>
+  );
+}
+```
+
+### 代码行高亮
+
+```jsx title="Highlight.tsx" {
+  return (
+    <div className="container">
+      <h1>Hello World</h1> {/* 这行将被高亮 */}
+    </div>
+  );
+}
+```
+
+## GitHub 风格的 Callout 提示框
+
+> [!NOTE]
+> 这是一个信息提示框
+
+> [!WARNING]
+> 这是一个警告提示框
+
+> [!SUCCESS]
+> 这是一个成功提示框
+
+
+
+## 链接处理
+
+### 内部链接
+
+[回到首页](/)
+[博客列表](/blogs)
+
+### 外部链接
+
+[React 官方网站](https://react.dev)
+
+### 单独的 URL（会变成书签卡片）
+
+https://nextjs.org
+
+### Bilibili 视频链接（会自动嵌入）
+
+[B站视频](https://www.bilibili.com/video/BV1Gx411w7cB)
+
+
+
+## 中英文混排自动加空格
+
+这是一段中文和English混合的文本，应该会自动添加空格。
+
+React是一个流行的前端框架，Next.js是基于React的全栈框架。
+
+## 特定链接测试
+
+### 测试链接 1：图片生成 API 链接
+
+https://neeko-copilot.bytedance.net/api/text2image?prompt=beautiful%20landscape%20with%20mountains%20and%20lake&size=1024x768
+
+### 测试链接 2：Bilibili 视频链接
+
+https://www.bilibili.com/video/BV1Gx411w7cB
+
+
+
+## 总结
+
+所有 MDX 功能都已测试完成，包括：
+
+1. 基本 Markdown 语法
+2. GFM 支持（表格、任务列表）
+3. 图片灯箱效果
+4. 代码块文件名显示和行高亮
+5. GitHub 风格的 Callout 提示框
+6. 链接处理（内部链接、外部链接、Bilibili视频嵌入、书签卡片）
+7. 中英文混排自动加空格

@@ -1,0 +1,124 @@
+{
+  "holidays": [
+    {
+      "name": "元旦",
+      "date": "2025-01-01",
+      "type": "gregorian",
+      "description": "公历新年"
+    },
+    {
+      "name": "春节",
+      "date": "2025-01-29",
+      "type": "lunar",
+      "description": "农历新年"
+    },
+    {
+      "name": "元宵节",
+      "date": "2025-02-12",
+      "type": "lunar",
+      "description": "农历正月十五"
+    },
+    {
+      "name": "清明节",
+      "date": "2025-04-05",
+      "type": "gregorian",
+      "description": "公历4月4-6日"
+    },
+    {
+      "name": "劳动节",
+      "date": "2025-05-01",
+      "type": "gregorian",
+      "description": "国际劳动节"
+    },
+    {
+      "name": "端午节",
+      "date": "2025-05-31",
+      "type": "lunar",
+      "description": "农历五月初五"
+    },
+    {
+      "name": "中秋节",
+      "date": "2025-10-06",
+      "type": "lunar",
+      "description": "农历八月十五"
+    },
+    {
+      "name": "国庆节",
+      "date": "2025-10-01",
+      "type": "gregorian",
+      "description": "中华人民共和国成立纪念日"
+    },
+    {
+      "name": "重阳节",
+      "date": "2025-10-29",
+      "type": "lunar",
+      "description": "农历九月初九"
+    },
+    {
+      "name": "元旦",
+      "date": "2026-01-01",
+      "type": "gregorian",
+      "description": "公历新年"
+    },
+    {
+      "name": "春节",
+      "date": "2026-02-17",
+      "type": "lunar",
+      "description": "农历新年"
+    },
+    {
+      "name": "元宵节",
+      "date": "2026-03-03",
+      "type": "lunar",
+      "description": "农历正月十五"
+    },
+    {
+      "name": "清明节",
+      "date": "2026-04-05",
+      "type": "gregorian",
+      "description": "公历4月4-6日"
+    },
+    {
+      "name": "劳动节",
+      "date": "2026-05-01",
+      "type": "gregorian",
+      "description": "国际劳动节"
+    },
+    {
+      "name": "端午节",
+      "date": "2026-06-19",
+      "type": "lunar",
+      "description": "农历五月初五"
+    },
+    {
+      "name": "中秋节",
+      "date": "2026-09-25",
+      "type": "lunar",
+      "description": "农历八月十五"
+    },
+    {
+      "name": "国庆节",
+      "date": "2026-10-01",
+      "type": "gregorian",
+      "description": "中华人民共和国成立纪念日"
+    },
+    {
+      "name": "重阳节",
+      "date": "2026-10-18",
+      "type": "lunar",
+      "description": "农历九月初九"
+    },
+    {
+      "name": "除夕",
+      "date": "2025-01-28",
+      "type": "lunar",
+      "description": "农历腊月三十"
+    },
+    {
+      "name": "除夕",
+      "date": "2026-02-16",
+      "type": "lunar",
+      "description": "农历腊月三十"
+    }
+  ]
+}

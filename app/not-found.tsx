@@ -1,3 +1,8 @@
+/**
+ * 功能：404页面
+ * 目的：当用户访问不存在的页面时显示
+ * 作者：Yqxnice
+ */
 import Link from 'next/link';
 
 const NotFoundPage = () => {

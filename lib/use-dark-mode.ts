@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+/**
+ * 功能：深色模式管理钩子
+ * 目的：提供深色模式的状态管理和切换功能
+ * 作者：Yqxnice
+ */
+import { useState } from "react";
 
 /**
  * 统一管理深色模式状态的 Hook
@@ -7,12 +12,10 @@ import { useEffect, useState } from "react";
  * - 同步 <html> 的 dark class
  */
 export function useDarkMode() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // 初始化主题（只在客户端运行）
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
+  // 使用惰性初始化，避免在useEffect中直接调用setState
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+    
     const savedDarkMode = window.localStorage.getItem("darkMode");
     let enabled = false;
 
@@ -25,14 +28,16 @@ export function useDarkMode() {
       enabled = window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
-
-    setIsDarkMode(enabled);
+    
+    // 同步HTML class
     if (enabled) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, []);
+    
+    return enabled;
+  });
 
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {

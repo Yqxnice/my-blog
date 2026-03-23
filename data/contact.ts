@@ -1,3 +1,8 @@
+/**
+ * 功能：联系和导航数据
+ * 目的：提供社交媒体链接和导航菜单数据
+ * 作者：Yqxnice
+ */
 import { Github, Twitter, MessageCircle, Share2, Rss, Mail, House, Book, BookOpen, Clock, BrainCircuit, Link as LinkIcon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 

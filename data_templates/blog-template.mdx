@@ -1,0 +1,129 @@
+<!--
+功能：博客文章模板
+目的：提供创建新博客文章的模板
+作者：Yqxnice
+-->
+---
+# 博客文章元数据
+# 标题
+# title: "文章标题"
+
+# 发布日期 (YYYY-MM-DD 格式)
+# date: "2026-03-22"
+
+# 文章描述
+# description: "文章描述"
+
+# 标签 (数组格式)
+# tags: ["tag1", "tag2", "tag3"]
+
+# 封面图片 URL
+# coverImage: "/path/to/cover-image.jpg"
+
+# 字数统计 (可选，会自动计算)
+# wordCount: 1000
+
+# 阅读时间 (分钟，可选，会自动计算)
+# readingTime: 5
+---
+
+# 文章标题
+
+## 二级标题
+
+这是一段普通的文本，包含**粗体**和*斜体*。
+
+- 无序列表项 1
+- 无序列表项 2
+- 无序列表项 3
+
+1. 有序列表项 1
+2. 有序列表项 2
+3. 有序列表项 3
+
+## GFM 支持
+
+### 表格
+
+| 名称 | 描述 | 值 |
+|------|------|----|
+| 示例 | 示例 | 示例 |
+
+### 任务列表
+
+- [x] 已完成任务
+- [ ] 未完成任务
+
+## 图片灯箱效果
+
+![图片描述](https://neeko-copilot.bytedance.net/api/text2image?prompt=placeholder%20image&size=1024x768)
+
+## 代码块
+
+### 代码块文件名显示
+
+```jsx title="Component.tsx"
+function Component() {
+  return (
+    <div className="container">
+      <h1>Hello World</h1>
+    </div>
+  );
+}
+```
+
+### 代码行高亮
+
+```jsx title="Highlight.tsx"
+function Component() {
+  return (
+    <div className="container">
+      <h1>Hello World</h1> {/* 这行将被高亮 */}
+    </div>
+  );
+}
+```
+
+## GitHub 风格的 Callout 提示框
+
+> [!NOTE]
+> 这是一个信息提示框
+
+> [!WARNING]
+> 这是一个警告提示框
+
+> [!SUCCESS]
+> 这是一个成功提示框
+
+
+
+## 链接处理
+
+### 内部链接
+
+[回到首页](/)
+[博客列表](/blogs)
+
+### 外部链接
+
+[React 官方网站](https://react.dev)
+
+### 单独的 URL（会变成书签卡片）
+
+https://nextjs.org
+
+### Bilibili 视频链接（会自动嵌入）
+
+[B站视频](https://www.bilibili.com/video/BV1Gx411w7cB)
+
+
+
+## 中英文混排自动加空格
+
+这是一段中文和English混合的文本，会自动添加空格。
+
+React是一个流行的前端框架，Next.js是基于React的全栈框架。
+
+## 总结
+
+文章总结内容

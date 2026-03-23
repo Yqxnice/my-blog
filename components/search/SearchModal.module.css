@@ -1,0 +1,203 @@
+/* Search.module.css */
+
+/* ================= 模态框布局 ================= */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999; /* 超高层级，防遮挡 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: transparent; 
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000000;
+}
+
+/* PC 端尺寸适配 */
+@media (min-width: 640px) {
+  .overlay {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .modal {
+    height: 300px;
+    max-width: 672px; 
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid #e2e8f0;
+  }
+}
+
+/* ================= 头部搜索框 ================= */
+.header {
+  flex: none;
+  position: relative;
+  border-bottom: 1px solid #f1f5f9;
+  background-color: #ffffff;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  /* 调整内边距，统一适配 */
+  padding: 16px 80px 16px 48px; 
+  font-size: 16px;
+  color: #1e293b;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.input::placeholder { color: #94a3b8; }
+
+.headerRight {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 状态项之间的间距 */
+}
+
+/* ================= 状态与列表 核心改变区 ================= */
+/* 新增：包裹结果区域，用于承载绝对定位的加载层 */
+.resultsWrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 调整：statusContainer 不再是 flex-1，而是填满 wrapper */
+.statusContainer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+  background-color: #f8fafc;
+  z-index: 5; /* 保证在 scrollableArea 之上 */
+}
+
+/* 新增：中心加载覆盖层 */
+.centralLoadingOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.85); /* 半透明白色，模糊背景 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 50; /* 保证在所有结果之上 */
+  color: #2563eb; /* blue-600 */
+  backdrop-filter: blur(2px); /* 进一步强化模糊效果 (需浏览器支持) */
+}
+
+/* 新增： Spinner 的 CSS 动画 */
+.spinner {
+  animation: spin 0.8s linear infinite;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.scrollableArea {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+/* 滚动条美化 */
+.scrollableArea::-webkit-scrollbar { width: 6px; }
+.scrollableArea::-webkit-scrollbar-track { background: transparent; }
+.scrollableArea::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+.scrollableArea::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+/* 搜索结果单条 */
+.hitItem {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f8fafc;
+  transition: background-color 0.15s;
+}
+.hitItem:hover { background-color: #f8fafc; }
+.hitTitle { font-size: 16px; font-weight: 500; color: #1e293b; margin: 0; }
+.hitItem:hover .hitTitle { color: #2563eb; }
+.hitDesc { font-size: 14px; color: #64748b; margin-top: 6px; line-height: 1.5; line-clamp: 2; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; }
+
+/* Algolia 高亮 (穿透作用域) */
+.hitItem :global(.ais-Highlight-highlighted),
+.hitItem :global(.ais-Snippet-highlighted) {
+  background-color: transparent !important;
+  color: #2563eb !important;
+  font-weight: 600 !important;
+  text-decoration: underline !important;
+  text-decoration-color: #93c5fd !important;
+  text-decoration-thickness: 2px !important;
+  text-underline-offset: 2px !important;
+}
+
+/* ================= 底部版权 ================= */
+.footer {
+  flex: none;
+  border-top: 1px solid #f1f5f9;
+  padding: 8px 16px;
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+}
+.algoliaLogo { width: 100px; opacity: 0.6; filter: grayscale(100%); transition: all 0.3s; }
+.algoliaLogo:hover { opacity: 1; filter: grayscale(0%); }
+
+/* 触发按钮 */
+.triggerBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #64748b;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.triggerBtn:hover { background-color: #e2e8f0; }
+.shortcutKey {
+  font-size: 12px;
+  padding: 2px 6px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}

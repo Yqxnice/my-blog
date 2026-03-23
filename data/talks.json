@@ -1,0 +1,203 @@
+{
+  "talks": [
+    {
+      "id": "talk-001",
+      "title": "关于编程的思考",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-001",
+          "content": "今天在写代码的时候突然想到，编程其实就像是在和计算机对话。我们用代码表达想法，计算机用执行结果回应。有时候沟通不畅，就会出现bug。"
+        },
+        {
+          "type": "quote",
+          "id": "content-002",
+          "text": "程序是关于抽象的艺术，而不是关于细节的科学。",
+          "author": "John Johnson"
+        }
+      ],
+      "tags": ["编程", "思考", "技术"],
+      "createdAt": "2024-12-15T10:30:00Z",
+      "location": "家里",
+      "mood": "思考",
+      "isPinned": true
+    },
+    {
+      "id": "talk-002",
+      "title": "今日天气不错",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-003",
+          "content": "阳光正好，微风不燥。出门散步的时候拍了一张天空的照片。"
+        },
+        {
+          "type": "image",
+          "id": "content-004",
+          "url": "https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=800",
+          "alt": "蓝天白云",
+          "caption": "今天的天空格外蓝"
+        }
+      ],
+      "tags": ["生活", "天气", "摄影"],
+      "createdAt": "2024-12-14T14:20:00Z",
+      "location": "公园",
+      "mood": "愉快"
+    },
+    {
+      "id": "talk-003",
+      "title": "发现一个有趣的网站",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-005",
+          "content": "今天发现了一个很有意思的设计网站，里面有很多创意作品可以参考。"
+        },
+        {
+          "type": "link",
+          "id": "content-006",
+          "url": "https://dribbble.com",
+          "title": "Dribbble - 设计师社区",
+          "description": "全球设计师的灵感源泉，发现创意设计作品",
+          "image": "https://cdn.dribbble.com/users/11686/screenshots/14479884/media/49a0f8c3978a2422a7b2e9b5e8f4e7e1.png",
+          "siteName": "Dribbble"
+        }
+      ],
+      "tags": ["设计", "工具", "发现"],
+      "createdAt": "2024-12-13T09:15:00Z",
+      "mood": "好奇"
+    },
+    {
+      "id": "talk-004",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-007",
+          "content": "凌晨三点，代码终于跑通了。这种成就感，只有程序员才能体会。"
+        }
+      ],
+      "tags": ["编程", "深夜", "成就感"],
+      "createdAt": "2024-12-12T03:00:00Z",
+      "mood": "疲惫但满足"
+    },
+    {
+      "id": "talk-005",
+      "title": "音乐时间",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-008",
+          "content": "一边听音乐一边写代码，效率翻倍。推荐这首："
+        },
+        {
+          "type": "link",
+          "id": "content-009",
+          "url": "https://music.163.com/song?id=123456",
+          "title": "夜的第七章 - 周杰伦",
+          "description": "经典歌曲，适合深夜聆听",
+          "siteName": "网易云音乐"
+        }
+      ],
+      "tags": ["音乐", "工作", "推荐"],
+      "createdAt": "2024-12-11T22:30:00Z",
+      "mood": "放松"
+    },
+    {
+      "id": "talk-006",
+      "title": "咖啡与代码",
+      "content": [
+        {
+          "type": "image",
+          "id": "content-010",
+          "url": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800",
+          "alt": "咖啡杯和代码",
+          "caption": "程序员的标配"
+        },
+        {
+          "type": "text",
+          "id": "content-011",
+          "content": "一杯咖啡，一段代码，一个下午。这是程序员最惬意的时光。"
+        }
+      ],
+      "tags": ["生活", "咖啡", "编程"],
+      "createdAt": "2024-12-10T15:45:00Z",
+      "location": "咖啡馆",
+      "mood": "惬意"
+    },
+    {
+      "id": "talk-007",
+      "content": [
+        {
+          "type": "quote",
+          "id": "content-012",
+          "text": "学习如何学习，比学习本身更重要。",
+          "author": "未知"
+        },
+        {
+          "type": "text",
+          "id": "content-013",
+          "content": "今天在整理学习笔记的时候，突然对这句话有了更深的理解。"
+        }
+      ],
+      "tags": ["学习", "思考", "笔记"],
+      "createdAt": "2024-12-09T20:10:00Z",
+      "mood": "思考"
+    },
+    {
+      "id": "talk-008",
+      "title": "周末计划",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-014",
+          "content": "这个周末的计划：\n1. 完善博客功能\n2. 看一本技术书\n3. 好好休息"
+        }
+      ],
+      "tags": ["周末", "计划", "生活"],
+      "createdAt": "2024-12-08T18:00:00Z",
+      "mood": "期待"
+    },
+    {
+      "id": "talk-009",
+      "title": "代码片段分享",
+      "content": [
+        {
+          "type": "text",
+          "id": "content-015",
+          "content": "今天写了一个很有用的React Hook，分享给大家："
+        },
+        {
+          "type": "text",
+          "id": "content-016",
+          "content": "```typescript\nconst useLocalStorage = (key: string, initialValue: any) => {\n  const [storedValue, setStoredValue] = useState(() => {\n    try {\n      const item = window.localStorage.getItem(key);\n      return item ? JSON.parse(item) : initialValue;\n    } catch (error) {\n      return initialValue;\n    }\n  });\n\n  const setValue = (value: any) => {\n    try {\n      setStoredValue(value);\n      window.localStorage.setItem(key, JSON.stringify(value));\n    } catch (error) {\n      console.error(error);\n    }\n  };\n\n  return [storedValue, setValue];\n};\n```"
+        }
+      ],
+      "tags": ["代码", "React", "分享"],
+      "createdAt": "2024-12-07T16:20:00Z",
+      "mood": "分享"
+    },
+    {
+      "id": "talk-010",
+      "title": "星空",
+      "content": [
+        {
+          "type": "image",
+          "id": "content-017",
+          "url": "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800",
+          "alt": "星空",
+          "caption": "城市里难得看到的星空"
+        }
+      ],
+      "tags": ["摄影", "自然", "星空"],
+      "createdAt": "2024-12-06T22:40:00Z",
+      "location": "郊外",
+      "mood": "宁静"
+    }
+  ],
+  "metadata": {
+    "title": "碎碎念",
+    "description": "记录生活中的点滴思考，分享日常的所见所闻。",
+    "version": "1.0.0",
+    "lastUpdated": "2024-12-15T10:30:00Z"
+  }
+}

@@ -1,3 +1,8 @@
+/**
+ * 功能：活动导航标签钩子
+ * 目的：根据当前路径确定活动的导航标签
+ * 作者：Yqxnice
+ */
 import { useMemo } from "react";
 import type { NavItem } from "@/lib/config";
 

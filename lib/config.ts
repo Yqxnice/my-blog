@@ -1,3 +1,8 @@
+/**
+ * 功能：网站配置
+ * 目的：集中管理网站的所有基本信息和设置
+ * 作者：Yqxnice
+ */
 import { Github, Twitter, MessageCircle, Share2, Rss, Mail, House, Book, BookOpen, Clock, BrainCircuit, Link as LinkIcon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -41,9 +46,9 @@ export const siteConfig = {
     items: [
       { title: "首页", path: "/", icon: House },
       { title: "博客", path: "/blogs", icon: Book },
-      { title: "手记", path: "/blogs/1", icon: BookOpen },
+      { title: "手记", path: "/notes", icon: BookOpen },
       { title: "归档", path: "/archive", icon: Clock },
-      { title: "思考", path: "/blogs/3", icon: BrainCircuit },
+      { title: "碎碎念", path: "/talks", icon: BrainCircuit },
       { title: "友情链接", path: "/links", icon: LinkIcon },
     ]
   },

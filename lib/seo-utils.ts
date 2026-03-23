@@ -1,5 +1,10 @@
+/**
+ * 功能：SEO元数据生成工具
+ * 目的：为博客文章生成SEO相关的元数据
+ * 作者：Yqxnice
+ */
 import type { Metadata } from 'next';
-import { getBlogById } from './md-utils';
+import { getBlogById } from './md-utils.server';
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const blog = getBlogById(params.id);

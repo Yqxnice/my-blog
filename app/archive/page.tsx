@@ -1,3 +1,8 @@
+/**
+ * 功能：归档页面
+ * 目的：按年份展示博客文章归档
+ * 作者：Yqxnice
+ */
 "use client";
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
@@ -24,7 +29,7 @@ interface YearGroup {
 
 function EntryRow({ entry, visible }: { entry: BlogListItem; visible: boolean }) {
   return (
-    <div className={`flex items-center py-4 border-b border-border/25 gap-6 transition-opacity duration-500 transition-transform duration-500 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-3'}`}>
+    <div className={`flex items-center py-4 border-b border-border gap-6 transition-opacity duration-500 transition-transform duration-500 ${visible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-3'}`}>
       {/* Date */}
       <span className="min-w-[40px] text-sm text-muted-foreground font-mono tracking-wider flex-shrink-0">
         {new Date(entry.date).toISOString().slice(5, 10).replace('-', '/')}
@@ -32,7 +37,7 @@ function EntryRow({ entry, visible }: { entry: BlogListItem; visible: boolean })
 
       {/* Title */}
       <Link href={`/blogs/${entry.slug}`} className="flex-1">
-        <span className="entry-title text-base text-foreground hover:text-primary transition-colors duration-200">
+        <span className="entry-title text-sm font-medium text-foreground hover:text-primary transition-colors duration-200">
           {entry.title}
         </span>
       </Link>
@@ -69,8 +74,8 @@ function YearSection({ group }: { group: YearGroup }) {
   return (
     <div ref={ref} className="mb-14">
       {/* Year header */}
-      <div className={`flex items-baseline gap-3 mb-2 pl-5 border-l-2 border-border/40 transition-opacity duration-600 ${visible ? 'opacity-100' : 'opacity-0'}`}>
-        <h3 className="text-3xl font-light text-foreground">{group.year}</h3>
+      <div className={`flex items-baseline gap-3 mb-2 pl-5 border-l-2 border-border transition-opacity duration-600 ${visible ? 'opacity-100' : 'opacity-0'}`}>
+        <h3 className="text-3xl font-serif font-light text-foreground">{group.year}</h3>
         <span className="text-xs text-muted-foreground font-mono">{group.posts.length} entries</span>
       </div>
 
@@ -153,21 +158,40 @@ export default function ArchivePage() {
     const grouped: Record<string, BlogListItem[]> = {};
 
     blogs.forEach((blog) => {
-      const date = new Date(blog.date);
-      const year = date.getFullYear().toString();
-
-      if (!grouped[year]) {
-        grouped[year] = [];
+      // 尝试从日期字符串中提取年份
+      let year = 0;
+      const dateStr = blog.date;
+      
+      // 尝试解析日期
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        year = date.getFullYear();
+      } else {
+        // 如果日期解析失败，尝试从字符串中提取年份
+        const yearMatch = dateStr.match(/\d{4}/);
+        if (yearMatch) {
+          year = parseInt(yearMatch[0]);
+        }
       }
-
-      grouped[year].push(blog);
+      
+      if (!isNaN(year) && year > 0) {
+        const yearStr = year.toString();
+        if (!grouped[yearStr]) {
+          grouped[yearStr] = [];
+        }
+        grouped[yearStr].push(blog);
+      }
     });
 
     return Object.entries(grouped)
       .sort(([yearA], [yearB]) => parseInt(yearB) - parseInt(yearA))
       .map(([year, posts]) => ({
         year: parseInt(year),
-        posts: posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        posts: posts.sort((a, b) => {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return dateB.getTime() - dateA.getTime();
+        })
       }));
   }, [blogs]);
 
@@ -188,8 +212,8 @@ export default function ArchivePage() {
   }, []);
 
   return (
-    <div className="w-full py-12">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="w-full">
+      <div className="max-w-[900px] mx-auto px-4 md:px-6 lg:px-8">
         {/* ── Header ── */}
         <div className={`mb-16 transition-opacity duration-800 transition-transform duration-800 ${headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
           {/* Label */}
@@ -197,7 +221,7 @@ export default function ArchivePage() {
 
           {/* Count */}
           <div className="flex items-baseline gap-2 mb-7">
-            <h1 className="text-6xl font-light text-foreground">{blogs.length}</h1>
+            <h1 className="text-4xl md:text-6xl font-serif font-light text-foreground">{blogs.length}</h1>
             <span className="text-muted-foreground">篇，再接再厉</span>
           </div>
 
@@ -219,12 +243,14 @@ export default function ArchivePage() {
           ))
         ) : (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium text-foreground mb-2">暂无文章</h3>
+            <h3 className="text-lg font-serif font-medium text-foreground mb-2">暂无文章</h3>
             <p className="text-muted-foreground">
               还没有发布任何博客文章。
             </p>
           </div>
         )}
+
+
       </div>
     </div>
   );

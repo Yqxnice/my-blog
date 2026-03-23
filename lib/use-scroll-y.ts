@@ -1,3 +1,8 @@
+/**
+ * 功能：滚动位置钩子
+ * 目的：提供滚动位置的监听和状态管理
+ * 作者：Yqxnice
+ */
 import { useEffect, useState } from "react";
 
 export function useScrollY() {

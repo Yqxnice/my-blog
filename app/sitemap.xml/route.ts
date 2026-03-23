@@ -1,4 +1,4 @@
-import { getAllBlogs } from '@/lib/md-utils';
+import { getAllBlogs } from '@/lib/md-utils.server';
 import { siteConfig } from '@/lib/config';
 
 export async function GET() {
@@ -26,7 +26,7 @@ export async function GET() {
   </url>
   ${blogs.map(blog => `
   <url>
-    <loc>${siteConfig.url}/blogs/${blog.slug}</loc>
+    <loc>${siteConfig.url}/${blog.noteType ? 'notes' : 'blogs'}/${blog.slug}</loc>
     <lastmod>${blog.date.split(' ')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

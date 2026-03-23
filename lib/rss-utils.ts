@@ -1,4 +1,9 @@
-import { getAllBlogs } from './md-utils';
+/**
+ * 功能：RSS订阅生成工具
+ * 目的：生成博客的RSS订阅内容
+ * 作者：Yqxnice
+ */
+import { getAllBlogs } from './md-utils.server';
 import { siteConfig } from './config';
 
 /**

@@ -1,13 +1,19 @@
+/**
+ * 功能：网站主布局组件
+ * 目的：提供网站的整体布局结构，包括导航栏、页脚等
+ * 作者：Yqxnice
+ */
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { siteConfig } from "@/lib/config";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Umami from "@/components/analytics/Umami";
-import { Navbar } from "@/components/blog/Navbar";
-import { Footer } from "@/components/blog/Footer";
-import { LoadingBar } from "@/components/blog/LoadingBar";
-import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import Umami from "@/components/common/analytics/Umami";
+import { Navbar } from "@/components/common/Navbar";
+import { Footer } from "@/components/common/footer/Footer";
+import { LoadingBar } from "@/components/common/LoadingBar";
+import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
+import ErrorBoundaryWrapper from "@/components/common/ErrorBoundaryWrapper";
 
 export const metadata: Metadata = {
   title: {
@@ -63,39 +69,6 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning className="scroll-smooth">
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // 深色模式初始化脚本，避免页面闪烁
-              if (typeof window !== 'undefined') {
-                const savedDarkMode = window.localStorage.getItem('darkMode');
-                let enabled = false;
-                
-                if (savedDarkMode === 'true') {
-                  enabled = true;
-                } else if (savedDarkMode === 'false') {
-                  enabled = false;
-                } else {
-                  // 没有显式设置时，根据系统偏好决定
-                  enabled = window.matchMedia &&
-                    window.matchMedia('(prefers-color-scheme: dark)').matches;
-                }
-                
-                if (enabled) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-              }
-            `
-          }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;700;900&display=swap"
-          rel="stylesheet"
-        />
         <link
           rel="alternate"
           type="application/rss+xml"
@@ -109,8 +82,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="木子博客" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://api.dicebear.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="font-sans antialiased">
+      <body className="antialiased">
         <Suspense fallback={null}>
           <SpeedInsights />
           <Umami />
@@ -118,9 +94,11 @@ export default function RootLayout({
         </Suspense>
         <LoadingBar />
         <Navbar />
-        <main className="min-h-screen w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8">
-          {children}
-        </main>
+        <ErrorBoundaryWrapper>
+          <main className="min-h-screen w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-6 sm:py-8">
+            {children}
+          </main>
+        </ErrorBoundaryWrapper>
         <Footer />
       </body>
     </html>
