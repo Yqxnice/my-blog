@@ -79,7 +79,7 @@ export interface QuoteContent extends BaseTalkContent {
 // -------------------------------------------------------------------
 export interface VideoContent extends BaseTalkContent {
   type: 'video';
-  url: string;        // 视频嵌入URL（必填），支持 YouTube、Bilibili 等
+  url: string;        // 视频嵌入URL（必填）
   thumbnail?: string; // 视频缩略图
   title?: string;     // 视频标题
   duration?: string;  // 视频时长，如 "3:45"

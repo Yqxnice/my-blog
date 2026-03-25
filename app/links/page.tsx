@@ -6,6 +6,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import styles from './links.module.css'
+import { LinkSkeleton } from '@/components/common/skeleton'
 
 
 
@@ -14,30 +15,17 @@ interface Friend {
   id: string
   name: string
   url: string
-  desc: string
+  description: string
   avatar: string
   since?: string
+  is_blocked?: boolean
+  is_lost?: boolean
 }
-
-// ── 友链数据 ──────────────────────────────────────────────────────────────────
-const FRIENDS: Friend[] = [
-  { id: 'f1',  name: 'Anthony Fu',        url: 'https://antfu.me',                   desc: 'Vue、Vite 核心成员，开源创作者，工具链和 DX 方向的标杆博客。',              avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=antfu&backgroundColor=4ade80,22c55e',      since: '2023-08' },
-  { id: 'f2',  name: '阮一峰的网络日志',   url: 'https://www.ruanyifeng.com/blog',    desc: '科技、经济与生活，每周科技爱好者周刊是我的固定阅读。',                       avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=ruanyifeng&backgroundColor=60a5fa,3b82f6', since: '2022-11' },
-  { id: 'f3',  name: 'Josh W. Comeau',    url: 'https://www.joshwcomeau.com',         desc: '把 CSS 和 React 讲得最有趣的博主之一，文章配图和交互设计都很精彩。',           avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=joshcomeau&backgroundColor=f9a8d4,ec4899', since: '2023-03' },
-  { id: 'f4',  name: 'Overreacted',       url: 'https://overreacted.io',             desc: 'Dan Abramov 的个人博客，React 深度思考文章，每篇都值得反复读。',               avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=overreacted&backgroundColor=818cf8,6366f1', since: '2022-09' },
-  { id: 'f5',  name: '程序员的喵',         url: 'https://catcoding.me',               desc: '独立开发者，写代码也写生活，是那种文字里有温度的技术博客。',                   avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=catcoding&backgroundColor=fde68a,fbbf24',  since: '2023-06' },
-  { id: 'f6',  name: '少数派',             url: 'https://sspai.com',                  desc: '高质量生产力工具媒体，效率应用和数字生活方式的好去处。',                       avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=sspai&backgroundColor=ff6b6b,ef4444',      since: '2022-07' },
-  { id: 'f7',  name: 'Refactoring UI',    url: 'https://www.refactoringui.com',       desc: 'Tailwind 作者写的设计方法论，教程序员用系统化方式思考视觉设计。',              avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=refactoringui&backgroundColor=34d399,10b981', since: '2023-01' },
-  { id: 'f8',  name: 'Leerob',            url: 'https://leerob.io',                  desc: 'Vercel 产品 VP，Next.js 生态的布道者，博客本身也是极好的设计参考。',           avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=leerob&backgroundColor=a5b4fc,818cf8',     since: '2023-04' },
-  { id: 'f9',  name: '一休',               url: 'https://yihuixiaoxi.com',            desc: '写产品、写设计、写生活，思维很清晰的国内独立博主。',                           avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=yihui&backgroundColor=6ee7b7,34d399',      since: '2024-01' },
-  { id: 'f10', name: 'Dribbble',          url: 'https://dribbble.com',               desc: '设计师灵感社区，刷 UI 灵感和配色方案的好地方。',                              avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=dribbble&backgroundColor=f9a8d4,fb7185',   since: '2022-06' },
-  { id: 'f11', name: 'Excalidraw',        url: 'https://excalidraw.com',             desc: '白板式协作绘图工具，画架构图和草图的必备，开源且好看。',                       avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=excali&backgroundColor=fcd34d,f59e0b',     since: '2023-09' },
-  { id: 'f12', name: '面包多',             url: 'https://mianbaoduo.com',             desc: '国内独立创作者变现平台，关注独立创作者经济的好资源。',                         avatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=mbd&backgroundColor=fbbf24,f59e0b',        since: '2024-02' },
-]
 
 // ── Icons ─────────────────────────────────────────────────────────────────────
 const ISend  = () => <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M14 2L2 7l5 2 2 5 5-12z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>
 const ICheck = () => <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+const ILoading = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="animate-spin"><path d="M8 1a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
 
 
 // ── FriendItem ────────────────────────────────────────────────────────────────
@@ -54,7 +42,7 @@ function FriendItem({ friend, idx }: { friend: Friend; idx: number }) {
       </div>
       <div className={styles.itemBody}>
         <div className={styles.itemName}>{friend.name}</div>
-        <div className={styles.itemDesc}>{friend.desc}</div>
+        <div className={styles.itemDesc}>{friend.description}</div>
       </div>
     </a>
   )
@@ -62,21 +50,41 @@ function FriendItem({ friend, idx }: { friend: Friend; idx: number }) {
 
 // ── Apply Form ────────────────────────────────────────────────────────────────
 function ApplyForm() {
-  const [form, setForm] = useState({ name: '', url: '', desc: '', email: '' })
+  const [form, setForm] = useState({ name: '', url: '', description: '', email: '', avatar: '' })
   const [sent, setSent] = useState(false)
   const [submitting, setSub] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(f => ({ ...f, [k]: e.target.value }))
 
-  const valid = form.name.trim() && form.url.trim() && form.desc.trim()
+  const valid = form.name.trim() && form.url.trim() && form.description.trim() && form.email.trim() && form.avatar.trim()
 
   const submit = async () => {
     if (!valid) return
     setSub(true)
-    await new Promise(r => setTimeout(r, 600))
-    setSent(true)
-    setSub(false)
+    setError(null)
+    
+    try {
+      const response = await fetch('/api/links', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || '提交失败')
+      }
+
+      setSent(true)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '提交失败，请稍后重试')
+    } finally {
+      setSub(false)
+    }
   }
 
   return (
@@ -86,6 +94,7 @@ function ApplyForm() {
         <div className={styles.sent}><ICheck /> 收到了！我会尽快审核，谢谢你的友链申请 🎉</div>
       ) : (
         <>
+          {error && <div className={styles.error}>{error}</div>}
           <div className={styles.formRow}>
             <div className={styles.field}>
               <label className={styles.label}>博客名称 *</label>
@@ -98,18 +107,18 @@ function ApplyForm() {
           </div>
           <div className={styles.field}>
             <label className={styles.label}>一句话简介 *</label>
-            <input className={styles.input} placeholder="用一句话介绍你的博客" value={form.desc} onChange={set('desc')} maxLength={60} />
+            <input className={styles.input} placeholder="用一句话介绍你的博客" value={form.description} onChange={set('description')} maxLength={60} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>联系邮箱（可选）</label>
+            <label className={styles.label}>联系邮箱 *</label>
             <input className={styles.input} type="email" placeholder="方便我联系你" value={form.email} onChange={set('email')} />
           </div>
           <div className={styles.field}>
-            <label className={styles.label}>头像图片地址（可选）</label>
-            <input className={styles.input} placeholder="https://... (建议正方形，会裁成圆形)" />
+            <label className={styles.label}>头像图片地址 *</label>
+            <input className={styles.input} placeholder="https://... (建议正方形，会裁成圆形)" value={form.avatar || ''} onChange={set('avatar')} />
           </div>
           <button className={styles.submit} onClick={submit} disabled={!valid || submitting}>
-            <ISend /> {submitting ? '提交中…' : '提交申请'}
+            {submitting ? <ILoading /> : <ISend />} {submitting ? '提交中…' : '提交申请'}
           </button>
         </>
       )}
@@ -119,17 +128,39 @@ function ApplyForm() {
 
 // ── Root ──────────────────────────────────────────────────────────────────────
 export default function LinksPage() {
-  // 初始使用原始顺序，确保服务器端和客户端一致
-  const [shuffled, setShuffled] = useState<Friend[]>(FRIENDS);
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  // 在客户端挂载后再随机排序
+  // 获取友链数据
   useEffect(() => {
-    const arr = [...FRIENDS];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    setShuffled(arr);
+    const fetchFriends = async () => {
+      try {
+        const response = await fetch('/api/links');
+        const data = await response.json();
+        
+        // 检查是否是错误响应
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        // 随机排序
+        const shuffled = [...(data || [])].sort(() => Math.random() - 0.5);
+        setFriends(shuffled);
+      } catch (err) {
+        // 只在开发环境显示错误，生产环境显示空状态
+        if (process.env.NODE_ENV === 'development') {
+          setError(err instanceof Error ? err.message : '获取友链失败');
+        } else {
+          setError(null);
+          setFriends([]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFriends();
   }, []);
 
   return (
@@ -148,7 +179,7 @@ export default function LinksPage() {
           </div>
           <div className={styles.headerStats}>
             <div className={styles.statBubble}>
-              <span className={styles.statNum}>{FRIENDS.length}</span>
+              <span className={styles.statNum}>{loading ? '...' : friends.length}</span>
               <span className={styles.statLabel}>个友链</span>
             </div>
           </div>
@@ -158,17 +189,32 @@ export default function LinksPage() {
 
       <main className={styles.main}>
 
-        {shuffled.length > 0 && (
+        {loading ? (
+          <>
+            <div className={styles.sectionHeader}>
+              <span className={styles.sectionTitle}>全部友链</span>
+            </div>
+            <LinkSkeleton count={12} />
+          </>
+        ) : error ? (
+          <div className={styles.error}>
+            {error}
+          </div>
+        ) : friends.length > 0 ? (
           <>
             <div className={styles.sectionHeader}>
               <span className={styles.sectionTitle}>全部友链</span>
             </div>
             <div className={styles.grid}>
-              {shuffled.map((f, i) => (
+              {friends.map((f, i) => (
                 <FriendItem key={f.id} friend={f} idx={i} />
               ))}
             </div>
           </>
+        ) : (
+          <div className={styles.empty}>
+            暂无友链
+          </div>
         )}
 
         {/* Apply */}
@@ -182,17 +228,19 @@ export default function LinksPage() {
                 我会在一周内审核，通过后将你的博客加入列表。
               </p>
               <div className={styles.reqs}>
-                {[
-                  '博客已正常运营，内容以原创为主',
-                  '博客内容健康，不含违法或不良信息',
-                  '请先将本站加入你的友链，再提交申请',
-                  '本站信息：木子博客 · w-blogs.top',
-                ].map((req, i) => (
-                  <div key={i} className={styles.req}>
-                    <div className={styles.reqIcon}>{i + 1}</div>
-                    {req}
-                  </div>
-                ))}
+                {
+                  [
+                    '博客已正常运营，内容以原创为主',
+                    '博客内容健康，不含违法或不良信息',
+                    '请先将本站加入你的友链，再提交申请',
+                    '本站信息：木子博客 · w-blogs.top',
+                  ].map((req, i) => (
+                    <div key={i} className={styles.req}>
+                      <div className={styles.reqIcon}>{i + 1}</div>
+                      {req}
+                    </div>
+                  ))
+                }
               </div>
             </div>
             <ApplyForm />

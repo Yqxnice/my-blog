@@ -13,15 +13,15 @@ interface BlogHeroProps {
 }
 
 export function BlogHero({ 
-  title = "你好，我是木子", 
+  title = "你好，我是Yqx", 
   subtitle = "前端开发者 · 记录技术、思考与生活的碎片" 
 }: BlogHeroProps) {
   return (
     <div className="max-w-[900px] mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12 flex flex-col md:flex-row items-center md:items-end gap-4 md:gap-8 text-center md:text-left">
-      <div className="flex-shrink-0 w-16 h-16 md:w-17 md:h-17 rounded-full border-2 border-border overflow-hidden relative">
+      <div className="flex-shrink-0 w-14 h-14 md:w-20 md:h-20 rounded-full border-2 border-border overflow-hidden relative">
         <Image
           src={me.src}
-          alt="木子"
+          alt="Yqx"
           fill
           className="object-cover"
           priority={true}

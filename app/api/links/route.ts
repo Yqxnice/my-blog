@@ -4,38 +4,62 @@
  * 作者：Yqxnice
  */
 import { NextResponse } from 'next/server';
-
-type LinkItem = {
-  id: string;
-  name: string;
-  url: string;
-  description?: string;
-  logo?: string;
-  author?: string;
-  tags?: string[];
-};
-
-const links: LinkItem[] = [
-  {
-    id: "fm",
-    name: "Frontend Master",
-    url: "https://frontendmaster.example",
-    description: "Frontend Master 提供高质量前端教程与资源",
-    logo: "https://dummyimage.com/60x60/111/fff.png&text=FM",
-    author: "Frontend Master Team",
-    tags: ["frontend","javascript"]
-  },
-  {
-    id: "uux",
-    name: "UI UX Pro Max",
-    url: "https://uiuxpromax.example",
-    description: "UI/UX 设计资源和案例集",
-    logo: "https://dummyimage.com/60x60/111/fff.png&text=UX",
-    author: "UI UX Pro Max Team",
-    tags: ["ui","ux","design"]
-  }
-];
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-  return NextResponse.json(links);
+  try {
+    const { data, error } = await supabase
+      .from('friends')
+      .select('*')
+      .eq('status', 'approved')
+      .eq('is_blocked', false)
+      .eq('is_lost', false)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching friends:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data || []);
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    // 如果出错，返回空数组，让前端能够正常显示
+    return NextResponse.json([]);
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    const { name, url, description, email, avatar } = body;
+
+    // 验证必填字段
+    if (!name || !url || !description || !email || !avatar) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from('friends')
+      .insert({
+        name,
+        url,
+        description,
+        email,
+        avatar,
+        status: 'pending'
+      })
+      .select();
+
+    if (error) {
+      console.error('Error creating friend request:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data[0], { status: 201 });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    // 返回错误状态码，让前端知道请求失败
+    return NextResponse.json({ error: '提交失败' }, { status: 500 });
+  }
 }

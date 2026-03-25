@@ -7,7 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const contentDir = path.join(process.cwd(), 'content');
+const contentDir = path.join(process.cwd(), 'content', 'blogs');
 
 /**
  * 统计字数（去除markdown标记）

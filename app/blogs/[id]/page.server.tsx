@@ -1,5 +1,4 @@
 import { getBlogById } from '@/lib/md-utils.server';
-import { Calendar, Clock, Eye, MessageSquare } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import BlogDetailClient from './page.client';

@@ -1,11 +1,6 @@
-/**
- * 功能：代码块组件
- * 目的：显示代码高亮，支持复制功能和行高亮
- * 作者：Yqxnice
- */
 import React, { useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Copy, Check } from 'lucide-react';
 
 interface CodeBlockProps {
@@ -16,38 +11,33 @@ interface CodeBlockProps {
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, language, meta }) => {
   const [copied, setCopied] = useState(false);
-  
-  // 解析meta字符串，提取文件名和高亮行
+
   const parseMeta = (meta?: string) => {
     if (!meta) return { title: '', highlightLines: [] };
-    
-    // 提取文件名
+
     const titleMatch = meta.match(/title="([^"]+)"/);
     const title = titleMatch ? titleMatch[1] : '';
-    
-    // 提取高亮行
+
     const highlightMatch = meta.match(/\{(\d+(?:-\d+)?(?:,\d+(?:-\d+)?)*)\}/);
     let highlightLines: number[] = [];
-    
+
     if (highlightMatch) {
       const ranges = highlightMatch[1].split(',');
       ranges.forEach(range => {
         if (range.includes('-')) {
           const [start, end] = range.split('-').map(Number);
-          for (let i = start; i <= end; i++) {
-            highlightLines.push(i);
-          }
+          for (let i = start; i <= end; i++) highlightLines.push(i);
         } else {
           highlightLines.push(Number(range));
         }
       });
     }
-    
+
     return { title, highlightLines };
   };
-  
+
   const { title, highlightLines } = parseMeta(meta);
-  
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
@@ -57,42 +47,72 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language, meta }) => {
       console.error('Failed to copy');
     }
   };
-  
+
   return (
-    <span className="block my-4 search-scrollbar">
-      <span className="flex items-center justify-between bg-[#282c34] text-gray-300 px-4 py-2 text-sm rounded-t-xl">
-        <div className="flex items-center gap-2">
-          <span>{language}</span>
-          {title && <span className="text-gray-400 text-xs">{title}</span>}
+    <div className="my-4 rounded-xl overflow-hidden w-full max-w-full bg-background shadow-sm border border-border">
+      {/* 顶部工具栏 */}
+      <div className="flex items-center justify-between bg-secondary text-muted-foreground px-3 sm:px-4 py-2 border-b border-border">
+        <div className="flex items-center gap-2 min-w-0 overflow-hidden">
+          <span className="shrink-0 text-muted-foreground text-xs font-mono uppercase tracking-wider">
+            {language}
+          </span>
+          {title && (
+            <span className="text-muted-foreground/80 text-xs truncate">
+              {title}
+            </span>
+          )}
         </div>
+
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1 hover:text-white transition-colors"
+          className="flex items-center justify-center gap-1.5 shrink-0 ml-2
+                     min-w-[32px] min-h-[32px] sm:min-w-[28px] sm:min-h-[28px] px-2 py-1 rounded-md
+                     hover:bg-secondary/80 hover:text-foreground active:scale-95 transition-all touch-manipulation"
+          aria-label={copied ? '已复制' : '复制代码'}
         >
-          {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? '已复制' : '复制'}
+          {copied ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
+          <span className="hidden sm:inline text-xs font-medium">{copied ? '已复制' : '复制'}</span>
         </button>
-      </span>
-      <SyntaxHighlighter
-        style={oneDark}
-        language={language}
-        PreTag="div"
-        className="!mt-0 !rounded-t-none !rounded-b-xl overflow-x-auto"
-        showLineNumbers={true}
-        wrapLines={true}
-        lineProps={(lineNumber: number) => {
-          return {
-            style: {
-              backgroundColor: highlightLines.includes(lineNumber) ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-              paddingLeft: '12px',
-              borderLeft: highlightLines.includes(lineNumber) ? '2px solid #c0392b' : 'none'
-            }
-          };
-        }}
+      </div>
+
+      {/* 滚动区域 */}
+      <div
+        className="overflow-x-auto w-full"
+        style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
       >
-        {code}
-      </SyntaxHighlighter>
-    </span>
+        <SyntaxHighlighter
+          style={{
+            ...oneLight,
+            'code[class*="language-"]': {
+              ...oneLight['code[class*="language-"]'],
+              backgroundColor: 'transparent',
+            },
+            'pre[class*="language-"]': {
+              ...oneLight['pre[class*="language-"]'],
+              backgroundColor: 'transparent',
+            },
+          }}
+          language={language}
+          PreTag="div"
+          className="!mt-0 !bg-transparent !rounded-none !text-sm sm:!text-sm !p-4"
+          showLineNumbers={true}
+          lineProps={(lineNumber: number) => ({
+            style: {
+              backgroundColor: highlightLines.includes(lineNumber)
+                ? 'rgba(192, 57, 43, 0.1)'
+                : 'transparent',
+              paddingLeft: '12px',
+              borderLeft: highlightLines.includes(lineNumber)
+                ? '3px solid #c0392b'
+                : '3px solid transparent',
+              display: 'block',
+            },
+          })}
+        >
+          {code}
+        </SyntaxHighlighter>
+      </div>
+    </div>
   );
 };
 

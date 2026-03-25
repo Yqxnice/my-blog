@@ -49,7 +49,7 @@ export const siteConfig = {
       { title: "手记", path: "/notes", icon: BookOpen },
       { title: "归档", path: "/archive", icon: Clock },
       { title: "碎碎念", path: "/talks", icon: BrainCircuit },
-      { title: "友情链接", path: "/links", icon: LinkIcon },
+      // { title: "友情链接", path: "/links", icon: LinkIcon },
     ]
   },
   

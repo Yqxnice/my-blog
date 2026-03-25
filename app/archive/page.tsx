@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
+import { Skeleton } from '@/components/common/skeleton';
 
 type BlogListItem = {
   id: string;
@@ -109,6 +110,7 @@ function StatItem({ value, label, accent = false }: { value: string | number; la
 export default function ArchivePage() {
   const [blogs, setBlogs] = useState<BlogListItem[]>([]);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const t = setTimeout(() => setHeaderVisible(true), 100);
@@ -148,6 +150,8 @@ export default function ArchivePage() {
         }
       } catch (error) {
         console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -237,7 +241,38 @@ export default function ArchivePage() {
         </div>
 
         {/* ── Timeline ── */}
-        {archiveData.length > 0 ? (
+        {loading ? (
+          <div className="space-y-14">
+            {Array.from({ length: 3 }).map((_, yearIndex) => (
+              <div key={yearIndex} className="mb-14">
+                {/* Year header */}
+                <div className="flex items-baseline gap-3 mb-2 pl-5 border-l-2 border-border">
+                  <Skeleton height="2.5rem" width="6rem" />
+                  <Skeleton height="1rem" width="8rem" />
+                </div>
+
+                {/* Entries */}
+                <div className="pl-5 space-y-4">
+                  {Array.from({ length: 5 }).map((_, entryIndex) => (
+                    <div key={entryIndex} className="flex items-center py-4 border-b border-border gap-6">
+                      {/* Date */}
+                      <Skeleton height="1rem" width="40px" />
+                      
+                      {/* Title */}
+                      <Skeleton height="1rem" width="60%" />
+                      
+                      {/* Tags */}
+                      <div className="flex gap-2">
+                        <Skeleton height="1rem" width="3rem" />
+                        <Skeleton height="1rem" width="2rem" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : archiveData.length > 0 ? (
           archiveData.map((group) => (
             <YearSection key={group.year} group={group} />
           ))

@@ -14,6 +14,7 @@ import { Footer } from "@/components/common/footer/Footer";
 import { LoadingBar } from "@/components/common/LoadingBar";
 import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
 import ErrorBoundaryWrapper from "@/components/common/ErrorBoundaryWrapper";
+import AuthProvider from "@/components/common/AuthProvider";
 
 export const metadata: Metadata = {
   title: {
@@ -75,6 +76,7 @@ export default function RootLayout({
           title="木子博客 RSS 订阅"
           href="/feed.xml"
         />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -87,19 +89,21 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased">
-        <Suspense fallback={null}>
-          <SpeedInsights />
-          <Umami />
-          <ServiceWorkerRegister />
-        </Suspense>
-        <LoadingBar />
-        <Navbar />
-        <ErrorBoundaryWrapper>
-          <main className="min-h-screen w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-6 sm:py-8">
-            {children}
-          </main>
-        </ErrorBoundaryWrapper>
-        <Footer />
+        <AuthProvider>
+          <Suspense fallback={null}>
+            <SpeedInsights />
+            <Umami />
+            <ServiceWorkerRegister />
+          </Suspense>
+          <LoadingBar />
+          <Navbar />
+          <ErrorBoundaryWrapper>
+            <main className="min-h-screen w-full max-w-[1200px] mx-auto px-4 md:px-6 lg:px-8 py-6 sm:py-8">
+              {children}
+            </main>
+          </ErrorBoundaryWrapper>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

@@ -128,12 +128,27 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* 移动端防止双击缩放干扰交互 */
+    -webkit-tap-highlight-color: transparent;
+    /* 防止 iOS 橡皮筋滚动超出内容区 */
+    overscroll-behavior: none;
   }
+
+  /* 移动端图片默认不允许被长按保存（视需求开启） */
+  /* img { -webkit-user-select: none; user-select: none; } */
 }
 
 @layer utilities {
   .animate-fadeInScale {
     animation: fadeInScale 0.3s ease-in-out;
+  }
+
+  /* 移动端友好的触摸操作 */
+  .touch-pan-x {
+    touch-action: pan-x;
+  }
+  .touch-pan-y {
+    touch-action: pan-y;
   }
 }
 
@@ -147,9 +162,6 @@
     transform: scale(1);
   }
 }
-
-
-
 
 
 @keyframes slideUp {
@@ -209,8 +221,15 @@
 }
 
 /* 搜索结果滚动条样式 */
+/*
+ * [FIX] 原来 hsl(var(--muted) / 0.5) 无效：
+ *   --muted 定义为 hex 值（#eeebe5），hsl() 期望"H S% L%"三个分量，
+ *   套 hex 进去等于 hsl(#eeebe5 / 0.5)，浏览器直接忽略。
+ *   改为直接写 rgba，亮/暗模式分别在 :root 和 .dark 里定义。
+ */
 .search-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 .search-scrollbar::-webkit-scrollbar-track {
@@ -218,23 +237,58 @@
 }
 
 .search-scrollbar::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted) / 0.5);
+  background: rgba(138, 132, 128, 0.35);
   border-radius: 3px;
 }
 
 .search-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted) / 0.8);
+  background: rgba(138, 132, 128, 0.6);
+}
+
+.dark .search-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(112, 104, 96, 0.4);
+}
+
+.dark .search-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(112, 104, 96, 0.7);
+}
+
+/* 移动端隐藏滚动条（不影响滚动功能） */
+@media (max-width: 640px) {
+  .search-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .search-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Talks 页面滚动条 */
 .custom-scrollbar::-webkit-scrollbar       { width: 6px; height: 6px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; border-radius: 3px; }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(166, 169, 175, 0.4);
+  background: rgba(138, 132, 128, 0.35);
   border-radius: 3px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(166, 169, 175, 0.6);
+  background: rgba(138, 132, 128, 0.6);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(112, 104, 96, 0.4);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(112, 104, 96, 0.7);
+}
+
+@media (max-width: 640px) {
+  .custom-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 

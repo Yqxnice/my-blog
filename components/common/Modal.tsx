@@ -154,10 +154,16 @@ export function Modal({
     <div
       className="fixed inset-0 z-999999 flex items-center justify-center p-4"
       role="presentation"
+      onClick={() => {
+        if (closeOnBackdropClick) {
+          onClose();
+        }
+      }}
     >
       {/* 模态框内容 */}
       <div
         ref={modalRef}
+        onClick={handleContentClick}
         className={cn(
           'relative w-full bg-background rounded-2xl shadow-2xl border border-border modal-animate-content flex flex-col max-h-[90vh]',
           'sm:max-h-[80vh]',

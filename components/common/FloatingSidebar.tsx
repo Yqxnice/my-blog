@@ -87,7 +87,7 @@ export default function FloatingSidebar({ tags = [], moods = [], moodEmojis = {}
   return (
     <div 
       ref={setSidebarRef}
-      className={`fixed right-5 flex flex-col gap-2.5 z-50 transition-all duration-300`}
+      className={`hidden md:flex fixed right-5 flex-col gap-2.5 z-50 transition-all duration-300`}
       style={{
         bottom: `${sidebarBottom}px`
       }}
