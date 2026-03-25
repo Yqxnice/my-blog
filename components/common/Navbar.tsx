@@ -61,7 +61,7 @@ export function Navbar() {
   // 受控显隐的导航项，数据来自配置文件
   const headerTabs = React.useMemo(() => siteConfig.navigation.items, []);
   const derivedActiveTab = useActiveNavTab(pathname, headerTabs);
-  const [activeTab, setActiveTab] = useState(derivedActiveTab);
+  const [activeTab, setActiveTab] = useState<string | undefined>();
 
   const handleTabClick = (tab: NavItem) => {
     // 提前更新高亮，提升点击反馈；路由切换后 derivedActiveTab 会保持一致
@@ -71,6 +71,11 @@ export function Navbar() {
     // 导航到目标路径
     router.push(tab.path);
   };
+
+  // 在客户端挂载后再设置 activeTab，避免 hydration mismatch
+  useEffect(() => {
+    setActiveTab(derivedActiveTab);
+  }, [derivedActiveTab]);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menuAnimating, setMenuAnimating] = useState(false);

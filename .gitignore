@@ -42,6 +42,8 @@ next-env.d.ts
 
 # trae
 .trae
+.qoder
+/docs
 
 .vercel
 .env*.local
